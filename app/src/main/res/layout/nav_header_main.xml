@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="200dp"
+    android:background="@color/salatowy"
+    android:gravity="bottom"
+    android:orientation="vertical"
+    android:theme="@style/ThemeOverlay.AppCompat.Dark">
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:layout_width="96dp"
+        android:layout_height="96dp"
+        android:src="@drawable/circular_shape"
+        android:layout_marginLeft="15dp"></com.google.android.material.imageview.ShapeableImageView>
+
+    <TextView
+        android:layout_margin="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Имя пользователя"
+        android:textColor="@color/gray"
+        android:textStyle="bold"/>
+
+</LinearLayout>

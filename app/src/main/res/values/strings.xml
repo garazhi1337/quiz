@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">SchoolProject</string>
+    <string name="enter_game">Enter game</string>
+    <string name="registration">Sign up</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="email">Email</string>
+    <string name="button_reg">Registration</string>
+    <string name="alreadyhave">Already have an account? Log in</string>
+    <string name="enter">Enter</string>
+    <string name="enterpin">Enter PIN</string>
+    <string name="login">Log in</string>
+    <string name="creategame">Create game</string>
+    <string name="warning1">You have to sign up or log in first</string>
+</resources>

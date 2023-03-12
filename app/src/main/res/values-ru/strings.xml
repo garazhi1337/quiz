@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">SchoolProject</string>
+    <string name="enter_game">Войти в игру</string>
+    <string name="registration">Регистрация</string>
+    <string name="username">Имя пользователя</string>
+    <string name="password">Пароль</string>
+    <string name="email">Эл. почта</string>
+    <string name="button_reg">Регистрация</string>
+    <string name="alreadyhave">Уже есть аккаунт? Войти</string>
+    <string name="enter">Войти</string>
+    <string name="enterpin">Введите PIN</string>
+    <string name="login">Войти</string>
+    <string name="creategame">Создать игру</string>
+    <string name="warning1">Сначала зарегестрируйтесь или войдите</string>
+</resources>
