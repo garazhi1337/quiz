@@ -6,4 +6,7 @@
     <item android:id="@+id/create_game"
         android:title="@string/creategame"
         android:icon="@drawable/creategame" />
+    <item android:id="@+id/mygames"
+        android:title="@string/mygames"
+        android:icon="@drawable/database" />
 </menu>
