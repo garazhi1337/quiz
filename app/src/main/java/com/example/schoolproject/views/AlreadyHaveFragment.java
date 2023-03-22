@@ -48,7 +48,12 @@ public class AlreadyHaveFragment extends Fragment {
                         .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                             @Override
                             public void onSuccess(AuthResult authResult) {
-                                Toast.makeText(getContext(), "Вы вошли как " + MainActivity.currentUser.getUsername(), Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(getContext(), "Вы вошли как " + MainActivity.currentUser.getUsername(), Toast.LENGTH_SHORT).show();
+                                FragmentManager fm = getActivity().getSupportFragmentManager();
+                                FragmentTransaction ft = fm.beginTransaction();
+                                ft.replace(R.id.nav_host_fragment, new EnterGameFragment());
+                                ft.addToBackStack(null);
+                                ft.commit();
                             }
                         })
                         .addOnFailureListener(new OnFailureListener() {

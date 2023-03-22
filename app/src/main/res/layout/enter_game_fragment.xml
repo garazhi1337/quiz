@@ -23,6 +23,7 @@
             android:textAlignment="center"></EditText>
 
         <Button
+            android:id="@+id/enterGameBtn"
             android:layout_marginTop="15dp"
             android:background="@drawable/shape_1"
             android:layout_below="@+id/enter_pin"

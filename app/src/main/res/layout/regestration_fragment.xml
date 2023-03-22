@@ -16,6 +16,22 @@
         android:orientation="vertical"
         android:padding="10dp">
 
+        <TextView
+            android:text="@string/addpfp"
+            android:textStyle="bold"
+            android:layout_marginBottom="10dp"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"></TextView>
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profilepic"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_marginBottom="10dp"
+            android:layout_gravity="center"
+            android:background="@drawable/circular_shape"></de.hdodenhof.circleimageview.CircleImageView>
+
         <EditText
             android:padding="10dp"
             android:hint="@string/username"
@@ -58,5 +74,16 @@
             android:layout_marginTop="10dp"
             android:textAlignment="center"></TextView>
     </LinearLayout>
+
+    <ProgressBar
+        android:visibility="invisible"
+        android:id="@+id/progress_circular"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:indeterminateDrawable="@drawable/progressbat"></ProgressBar>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

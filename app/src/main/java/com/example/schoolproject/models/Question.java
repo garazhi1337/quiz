@@ -16,6 +16,7 @@ public class Question implements Parcelable {
     private String questionText;
     private String photoUrl;
 
+
     protected Question(Parcel in) {
         if (in.readByte() == 0) {
             seconds = null;

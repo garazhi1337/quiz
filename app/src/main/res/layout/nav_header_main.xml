@@ -2,24 +2,36 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="200dp"
-    android:background="@color/salatowy"
+    android:layout_height="220dp"
+    android:background="@color/temno_salatowy"
     android:gravity="bottom"
     android:orientation="vertical"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
-    <com.google.android.material.imageview.ShapeableImageView
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/currentPfp"
         android:layout_width="96dp"
         android:layout_height="96dp"
-        android:src="@drawable/circular_shape"
-        android:layout_marginLeft="15dp"></com.google.android.material.imageview.ShapeableImageView>
+        android:layout_marginBottom="15dp"
+        android:layout_marginLeft="15dp"/>
 
     <TextView
-        android:layout_margin="15dp"
+        android:id="@+id/currentUsername"
+        android:layout_marginHorizontal="15dp"
+        android:layout_marginBottom="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Имя пользователя"
-        android:textColor="@color/gray"
+        android:textColor="@color/white"
+        android:textSize="18dp"
         android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/currentEmail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="15dp"
+        android:layout_marginBottom="15dp"
+        android:text="example@gmail.com"></TextView>
 
 </LinearLayout>

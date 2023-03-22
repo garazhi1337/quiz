@@ -33,9 +33,12 @@
                 android:layout_marginHorizontal="10dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/shape4"
-                android:paddingHorizontal="10dp"></EditText>
+                android:paddingHorizontal="10dp"
+                android:text="@string/notitle"></EditText>
 
             <androidx.recyclerview.widget.RecyclerView
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                android:orientation="vertical"
                 android:layout_below="@+id/editText"
                 android:id="@+id/recyclerView"
                 android:layout_width="match_parent"
@@ -70,4 +73,15 @@
 
 
     </ScrollView>
+
+    <ProgressBar
+        android:visibility="invisible"
+        android:id="@+id/progress_circular"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:indeterminateDrawable="@drawable/progressbat"></ProgressBar>
 </androidx.constraintlayout.widget.ConstraintLayout>

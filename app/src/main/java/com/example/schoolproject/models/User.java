@@ -2,7 +2,15 @@ package com.example.schoolproject.models;
 
 public class User {
 
-    private String username, password, email, uid;
+    private String username, password, email, uid, pfpLink;
+
+    public String getPfpLink() {
+        return pfpLink;
+    }
+
+    public void setPfpLink(String pfpLink) {
+        this.pfpLink = pfpLink;
+    }
 
     public String getUsername() {
         return username;

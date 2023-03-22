@@ -5,33 +5,61 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.schoolproject.MainActivity;
 import com.example.schoolproject.R;
 import com.example.schoolproject.databinding.CreateGameFragmentBinding;
+import com.example.schoolproject.models.Game;
 import com.example.schoolproject.models.Question;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.squareup.picasso.Picasso;
+import com.xwray.groupie.GroupAdapter;
+import com.xwray.groupie.GroupieViewHolder;
+import com.xwray.groupie.Item;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Random;
 
 public class CreateGameFragment extends Fragment {
 
     private CreateGameFragmentBinding binding;
     private ArrayList<Question> questions;
+    private GroupAdapter<GroupieViewHolder> adapter;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = CreateGameFragmentBinding.inflate(inflater, container, false);
-        questions = new ArrayList<>();
+        adapter = new GroupAdapter<>();
+
         //получение списка вопросов из creategamefragment
-        Bundle data = new Bundle();
-        data = this.getArguments();
-        questions = data.getParcelableArrayList("CREATE_Q");
+        if (this.getArguments() != null) {
+            Bundle data = this.getArguments();
+            questions = data.getParcelableArrayList("CREATE_Q");
+        } else {
+            questions = new ArrayList<>();
+        }
+
+        for (Question q : questions) {
+            adapter.add(new QuestionItem(q));
+        }
+
+        binding.recyclerView.setAdapter(adapter);
 
         binding.addQuestionBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -48,6 +76,111 @@ public class CreateGameFragment extends Fragment {
             }
         });
 
+        binding.saveGameBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                saveGame();
+            }
+        });
+
+
+
         return binding.getRoot();
+    }
+
+    //сохрянает игру в бд
+    public void saveGame() {
+        binding.progressCircular.setVisibility(View.VISIBLE);
+        Game game = new Game();
+        if (!binding.editText.getText().equals(null)) {
+            game.setTitle(binding.editText.getText().toString());
+        } else {
+            game.setTitle("Без названия");
+        }
+        game.setPin(getRandomNumberString());
+        game.setStarted(false);
+        game.setQuestions(convertArrayListToHashMap(questions));
+        game.setAuthor(MainActivity.currentUser.getUsername());
+
+        DatabaseReference ref = FirebaseDatabase.getInstance(MainActivity.DATABASE_PATH).getReference("games/" + game.getPin() + "/");
+        ref.setValue(game)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Toast.makeText(getContext(), "Success!", Toast.LENGTH_SHORT).show();
+                        binding.progressCircular.setVisibility(View.INVISIBLE);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                        binding.progressCircular.setVisibility(View.INVISIBLE);
+                    }
+                });
+    }
+
+    public String getRandomNumberString() {
+        // It will generate 6 digit random Number.
+        // from 0 to 999999
+        Random rnd = new Random();
+        int number = rnd.nextInt(999999);
+
+        // this will convert any number sequence into 6 character.
+        return String.format("%06d", number);
+    }
+
+
+
+    public HashMap<String, Question> convertArrayListToHashMap(ArrayList<Question> arrayList) {
+        HashMap<String, Question> hashMap = new HashMap<>();
+        int i = 1;
+        for (Question question : arrayList) {
+            //добавляю строку, чтобы не переводилось в
+            // инт и нормально записывалось как map а не arraylist
+            hashMap.put("ID" + i, question);
+            i++;
+        }
+
+        return hashMap;
+    }
+
+    class QuestionItem extends Item<GroupieViewHolder> {
+
+        Question question;
+
+        public QuestionItem(Question question) {
+            this.question = question;
+        }
+
+        @Override
+        public void bind(@NonNull GroupieViewHolder viewHolder, int position) {
+            ImageView imageView = viewHolder.itemView.findViewById(R.id.questionImageView);
+            TextView textView = viewHolder.itemView.findViewById(R.id.questionTitle);
+            ImageButton imageButton = viewHolder.itemView.findViewById(R.id.deleteQuestion);
+
+            Picasso.get()
+                    .load(question.getPhotoUrl())
+                    .into(imageView);
+
+            textView.setText(question.getQuestionText());
+
+            imageButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    questions.remove(question);
+                    adapter.clear();
+                    for (Question q : questions) {
+                        adapter.add(new QuestionItem(q));
+                    }
+                    binding.recyclerView.setAdapter(adapter);
+                }
+            });
+        }
+
+        @Override
+        public int getLayout() {
+            return R.layout.question_item;
+        }
     }
 }

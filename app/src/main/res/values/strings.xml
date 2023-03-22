@@ -25,4 +25,14 @@
     <string name="answer3">Answer 3</string>
     <string name="answer4">Answer 4</string>
     <string name="timer">Timer</string>
+    <string name="notitle">No title</string>
+    <string name="addpfp">Add profile image</string>
+    <string name="author">Author: </string>
+    <string name="members">Members: </string>
+    <string name="qnum">Questions number: </string>
+    <string name="pin">PIN: </string>
+    <string name="gamenotstarted">The game has not started</string>
+    <string name="gamestarted">The game is on</string>
+    <string name="warning2">The game is not found</string>
+
 </resources>

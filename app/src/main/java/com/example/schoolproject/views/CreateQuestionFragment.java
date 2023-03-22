@@ -25,6 +25,8 @@ import com.example.schoolproject.R;
 import com.example.schoolproject.databinding.CreateQuestionFragmentBinding;
 import com.example.schoolproject.models.Question;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -82,32 +84,38 @@ public class CreateQuestionFragment extends Fragment {
         binding.saveQuestionBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                binding.progressCircular.setVisibility(View.VISIBLE);
                 if (photoUri != null) {
                     uploadImageToDatabase(photoUri);
                 } else {
                     Question question = new Question();
-                    question.setQuestionText(binding.questionText.getText().toString());
+                    question.setQuestionText(binding.editTextQt.getText().toString());
                     question.setPhotoUrl("photoUrl");
 
+
                     HashMap<String, Boolean> map1 = new HashMap<>();
-                    map1.put(binding.edittext1.getText().toString(), binding.checkbox1.isChecked());
+                    map1.put(binding.edittext1.getText().toString() + " ", binding.checkbox1.isChecked());
                     question.setAnswerOne(map1);
 
                     HashMap<String, Boolean> map2 = new HashMap<>();
-                    map2.put(binding.edittext2.getText().toString(), binding.checkbox2.isChecked());
+                    map2.put(binding.edittext2.getText().toString() + " ", binding.checkbox2.isChecked());
                     question.setAnswerTwo(map2);
 
                     HashMap<String, Boolean> map3 = new HashMap<>();
-                    map3.put(binding.edittext3.getText().toString(), binding.checkbox3.isChecked());
+                    map3.put(binding.edittext3.getText().toString() + " ", binding.checkbox3.isChecked());
                     question.setAnswerThree(map3);
 
                     HashMap<String, Boolean> map4 = new HashMap<>();
-                    map4.put(binding.edittext4.getText().toString(), binding.checkbox4.isChecked());
+                    map4.put(binding.edittext4.getText().toString() + " ", binding.checkbox4.isChecked());
                     question.setAnswerFour(map4);
+
+
 
                     question.setSeconds(Integer.parseInt(binding.spinner.getSelectedItem().toString()));
 
                     questions.add(question);
+
+                    binding.progressCircular.setVisibility(View.INVISIBLE);
 
                     FragmentManager fm = getActivity().getSupportFragmentManager();
                     FragmentTransaction ft = fm.beginTransaction();
@@ -171,28 +179,30 @@ public class CreateQuestionFragment extends Fragment {
                                     public void onSuccess(Uri uri) {
                                         photoUrl = uri.toString();
                                         Question question = new Question();
-                                        question.setQuestionText(binding.questionText.getText().toString());
+                                        question.setQuestionText(binding.editTextQt.getText() + " ".trim());
                                         question.setPhotoUrl(photoUrl);
 
                                         HashMap<String, Boolean> map1 = new HashMap<>();
-                                        map1.put(binding.edittext1.getText().toString(), binding.checkbox1.isChecked());
+                                        map1.put(binding.edittext1.getText().toString() + " ", binding.checkbox1.isChecked());
                                         question.setAnswerOne(map1);
 
                                         HashMap<String, Boolean> map2 = new HashMap<>();
-                                        map2.put(binding.edittext2.getText().toString(), binding.checkbox2.isChecked());
+                                        map2.put(binding.edittext2.getText().toString() + " ", binding.checkbox2.isChecked());
                                         question.setAnswerTwo(map2);
 
                                         HashMap<String, Boolean> map3 = new HashMap<>();
-                                        map3.put(binding.edittext3.getText().toString(), binding.checkbox3.isChecked());
+                                        map3.put(binding.edittext3.getText().toString() + " ", binding.checkbox3.isChecked());
                                         question.setAnswerThree(map3);
 
                                         HashMap<String, Boolean> map4 = new HashMap<>();
-                                        map4.put(binding.edittext4.getText().toString(), binding.checkbox4.isChecked());
+                                        map4.put(binding.edittext4.getText().toString() + " ", binding.checkbox4.isChecked());
                                         question.setAnswerFour(map4);
 
                                         question.setSeconds(Integer.parseInt(binding.spinner.getSelectedItem().toString()));
 
                                         questions.add(question);
+
+                                        binding.progressCircular.setVisibility(View.INVISIBLE);
 
                                         FragmentManager fm = getActivity().getSupportFragmentManager();
                                         FragmentTransaction ft = fm.beginTransaction();

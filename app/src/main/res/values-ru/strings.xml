@@ -25,4 +25,13 @@
     <string name="answer3">Ответ 3</string>
     <string name="answer4">Ответ 4</string>
     <string name="timer">Таймер</string>
+    <string name="notitle">Без названия</string>
+    <string name="addpfp">Добавить фото профиля</string>
+    <string name="author">Автор: </string>
+    <string name="members">Участники: </string>
+    <string name="qnum">Кол-во вопросов: </string>
+    <string name="pin">PIN: </string>
+    <string name="gamenotstarted">Игра не начата</string>
+    <string name="gamestarted">Игра идет</string>
+    <string name="warning2">Игра не найдена</string>
 </resources>

@@ -1,6 +1,10 @@
 package com.example.schoolproject.views;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,10 +24,19 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import java.io.IOException;
+import java.util.UUID;
 
 public class RegistrationFragment extends Fragment {
 
     private RegestrationFragmentBinding binding;
+    private Uri photoUri;
+    private String pfpUrl;
+    String uid;
 
     @Nullable
     @Override
@@ -49,21 +62,13 @@ public class RegistrationFragment extends Fragment {
                         .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                             @Override
                             public void onSuccess(AuthResult authResult) {
-                                User user = new User();
-                                user.setUsername(binding.username.getText().toString());
-                                user.setPassword(binding.password.getText().toString());
-                                user.setEmail(binding.email.getText().toString());
-                                user.setUid(authResult.getUser().getUid());
+                                uid = authResult.getUser().getUid();
 
-                                DatabaseReference database = FirebaseDatabase.getInstance(MainActivity.DATABASE_PATH)
-                                        .getReference("/users/" + authResult.getUser().getUid());
-                                database.setValue(user)
-                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                            @Override
-                                            public void onSuccess(Void unused) {
-                                                Toast.makeText(getContext(), "Успех", Toast.LENGTH_SHORT).show();
-                                            }
-                                        });
+                                if (photoUri != null) {
+                                    uploadUserToDatabaseWithPfp(photoUri);
+                                } else {
+                                    uploadUserToDatabaseWithoutPfp();
+                                }
                             }
                         })
                         .addOnFailureListener(new OnFailureListener() {
@@ -75,11 +80,112 @@ public class RegistrationFragment extends Fragment {
             }
         });
 
+        binding.profilepic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+                photoPickerIntent.setType("image/*");
+                try {
+                    startActivityForResult(photoPickerIntent, 0);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
         return binding.getRoot();
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        try {
+            photoUri = data.getData();
+
+            Bitmap bitmap = MediaStore.Images.Media.getBitmap(requireActivity().getContentResolver(), photoUri);
+            Bitmap bmpimg = Bitmap.createScaledBitmap(bitmap, binding.profilepic.getWidth(), binding.profilepic.getHeight(), true);
+            binding.profilepic.setBackground(null); //делает кнопку выбора фото прозрачной
+            binding.profilepic.setImageBitmap(bmpimg);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void uploadUserToDatabaseWithPfp(Uri uri) {
+        binding.progressCircular.setVisibility(View.VISIBLE);
+        String filename = UUID.randomUUID().toString();
+        StorageReference ref = FirebaseStorage.getInstance().getReference("/images/" + filename);
+        ref.putFile(uri)
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        ref.getDownloadUrl()
+                                .addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                    @Override
+                                    public void onSuccess(Uri uri) {
+                                        pfpUrl = uri.toString();
+
+                                        User user = new User();
+                                        user.setUsername(binding.username.getText().toString());
+                                        user.setPassword(binding.password.getText().toString());
+                                        user.setEmail(binding.email.getText().toString());
+                                        user.setUid(uid);
+                                        user.setPfpLink(pfpUrl);
+
+                                        DatabaseReference database = FirebaseDatabase.getInstance(MainActivity.DATABASE_PATH)
+                                                .getReference("/users/" + uid);
+                                        database.setValue(user)
+                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                    @Override
+                                                    public void onSuccess(Void unused) {
+                                                        Toast.makeText(getContext(), "Успех", Toast.LENGTH_SHORT).show();
+                                                        binding.progressCircular.setVisibility(View.INVISIBLE);
+                                                    }
+                                                })
+                                                .addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                        binding.progressCircular.setVisibility(View.INVISIBLE);
+                                                    }
+                                                });
+                                    }
+                                });
+                    }
+                });
+
+
+    }
+
+    public void uploadUserToDatabaseWithoutPfp() {
+        binding.progressCircular.setVisibility(View.VISIBLE);
+        User user = new User();
+        user.setUsername(binding.username.getText().toString());
+        user.setPassword(binding.password.getText().toString());
+        user.setEmail(binding.email.getText().toString());
+        user.setUid(uid);
+        user.setPfpLink("link");
+
+        DatabaseReference database = FirebaseDatabase.getInstance(MainActivity.DATABASE_PATH)
+                .getReference("/users/" + uid);
+        database.setValue(user)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Toast.makeText(getContext(), "Успех", Toast.LENGTH_SHORT).show();
+                        binding.progressCircular.setVisibility(View.INVISIBLE);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                        binding.progressCircular.setVisibility(View.INVISIBLE);
+                    }
+                });
+
     }
 }
