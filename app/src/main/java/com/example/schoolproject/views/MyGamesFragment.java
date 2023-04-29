@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,6 +17,7 @@ import com.example.schoolproject.MainActivity;
 import com.example.schoolproject.R;
 import com.example.schoolproject.databinding.MyGamesFragmentBinding;
 import com.example.schoolproject.models.Game;
+import com.example.schoolproject.models.User;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -29,6 +31,8 @@ import com.xwray.groupie.Item;
 import java.util.ArrayList;
 
 public class MyGamesFragment extends Fragment {
+
+    //отображение всех созданных игр пользовтеля
 
     private MyGamesFragmentBinding binding;
     private GroupAdapter<GroupieViewHolder> adapter;
@@ -78,6 +82,7 @@ public class MyGamesFragment extends Fragment {
         return binding.getRoot();
     }
 
+    //очищает адаптер в котором находится массив
     public void refreshAdapter() {
         adapter.clear();
         for (Game g : games) {
@@ -89,6 +94,7 @@ public class MyGamesFragment extends Fragment {
     class MyGameItem extends Item<GroupieViewHolder> {
 
         private Game game;
+        private ArrayList<String> memberNames = new ArrayList<>();
 
         public MyGameItem(Game game) {
             this.game = game;
@@ -129,12 +135,9 @@ public class MyGamesFragment extends Fragment {
                 public void onClick(View view) {
                     if (!game.getStarted()) {
                         game.setStarted(true);
-
-
                         ref.setValue(game);
                         refreshAdapter();
                     }
-
                 }
             });
 
@@ -142,8 +145,47 @@ public class MyGamesFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
                     ref.removeValue();
+                    games.remove(game);
+                    Toast.makeText(getContext(), "deleted", Toast.LENGTH_SHORT).show();
+                    refreshAdapter();
                 }
             });
+
+            DatabaseReference ref2 = FirebaseDatabase.getInstance(MainActivity.DATABASE_PATH).getReference("/games/" + game.getPin() + "/players/");
+            ref2.addChildEventListener(new ChildEventListener() {
+                @Override
+                public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                    //добавляю список участников
+                    User user = snapshot.getValue(User.class);
+                    //memberNames.add(user.getUsername());
+                    members.setText(members.getText().toString().concat(user.getUsername() + ", "));
+
+                }
+
+                @Override
+                public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+                }
+
+                @Override
+                public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+                }
+
+                @Override
+                public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+
+            //for (String username : memberNames) {
+            //    members.setText(members.getText() + username);
+            //}
         }
 
         @Override

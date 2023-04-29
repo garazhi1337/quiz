@@ -22,6 +22,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class AlreadyHaveFragment extends Fragment {
 
+    //если уже зарегестрированы, ввести имейл и пароль чтобы войти
     private AlreadyHaveFragmentBinding binding;
 
     @Nullable

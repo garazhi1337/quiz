@@ -143,6 +143,12 @@ public class RegistrationFragment extends Fragment {
                                                     public void onSuccess(Void unused) {
                                                         Toast.makeText(getContext(), "Успех", Toast.LENGTH_SHORT).show();
                                                         binding.progressCircular.setVisibility(View.INVISIBLE);
+
+                                                        FragmentManager fm = getActivity().getSupportFragmentManager();
+                                                        FragmentTransaction ft = fm.beginTransaction();
+                                                        ft.replace(R.id.nav_host_fragment, new EnterGameFragment());
+                                                        ft.addToBackStack(null);
+                                                        ft.commit();
                                                     }
                                                 })
                                                 .addOnFailureListener(new OnFailureListener() {
@@ -177,6 +183,12 @@ public class RegistrationFragment extends Fragment {
                     public void onSuccess(Void unused) {
                         Toast.makeText(getContext(), "Успех", Toast.LENGTH_SHORT).show();
                         binding.progressCircular.setVisibility(View.INVISIBLE);
+
+                        FragmentManager fm = getActivity().getSupportFragmentManager();
+                        FragmentTransaction ft = fm.beginTransaction();
+                        ft.replace(R.id.nav_host_fragment, new EnterGameFragment());
+                        ft.addToBackStack(null);
+                        ft.commit();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {

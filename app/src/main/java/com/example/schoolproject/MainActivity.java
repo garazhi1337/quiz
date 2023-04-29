@@ -125,7 +125,12 @@ public class MainActivity extends AppCompatActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                changeCurrentUser();
+                                try {
+                                    changeCurrentUser();
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+
                             }
                         });
                     }
