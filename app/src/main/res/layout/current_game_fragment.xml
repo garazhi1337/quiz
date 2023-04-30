@@ -11,7 +11,7 @@
         android:textSize="20dp"
         android:text="PIN: "
         android:textStyle="bold"
-        android:id="@+id/currentQuestionText"
+        android:id="@+id/currentPin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
@@ -24,7 +24,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:text="1 of 5"
+        android:text="@string/of"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"></TextView>
@@ -36,14 +36,14 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/currentQuestionText">
+        app:layout_constraintTop_toBottomOf="@+id/currentPin">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
             <TextView
-                android:id="@+id/currentPin"
+                android:id="@+id/currentQuestionText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
@@ -61,7 +61,7 @@
                 app:layout_constraintDimensionRatio="1:1"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/currentPin"></ImageView>
+                app:layout_constraintTop_toBottomOf="@+id/currentQuestionText"></ImageView>
 
             <GridLayout
                 android:id="@+id/gridLayout"
@@ -76,9 +76,10 @@
                 app:layout_constraintTop_toBottomOf="@+id/imageView">
 
                 <androidx.cardview.widget.CardView
+
                     android:id="@+id/answer1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
                     android:layout_row="0"
                     android:layout_rowWeight="1"
                     android:layout_column="0"
@@ -89,6 +90,7 @@
                     app:cardCornerRadius="7dp">
 
                     <TextView
+                        android:layout_margin="10dp"
                         android:id="@+id/answer1Tw"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -101,8 +103,8 @@
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/answer2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
                     android:layout_row="0"
                     android:layout_rowWeight="1"
                     android:layout_column="1"
@@ -113,6 +115,7 @@
                     app:cardCornerRadius="7dp">
 
                     <TextView
+                        android:layout_margin="10dp"
                         android:id="@+id/answer2Tw"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -125,8 +128,8 @@
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/answer3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
                     android:layout_row="1"
                     android:layout_rowWeight="1"
                     android:layout_column="0"
@@ -137,6 +140,7 @@
                     app:cardCornerRadius="7dp">
 
                     <TextView
+                        android:layout_margin="10dp"
                         android:id="@+id/answer3Tw"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -149,8 +153,8 @@
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/answer4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
                     android:layout_row="1"
                     android:layout_rowWeight="1"
                     android:layout_column="1"
@@ -161,6 +165,7 @@
                     app:cardCornerRadius="7dp">
 
                     <TextView
+                        android:layout_margin="10dp"
                         android:id="@+id/answer4Tw"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

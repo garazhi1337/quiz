@@ -6,9 +6,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.database.DatabaseUtilsCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -18,6 +20,7 @@ import com.example.schoolproject.MainActivity;
 import com.example.schoolproject.R;
 import com.example.schoolproject.databinding.CurrentGameFragmentBinding;
 import com.example.schoolproject.models.Game;
+import com.example.schoolproject.models.Question;
 import com.example.schoolproject.models.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
@@ -31,15 +34,24 @@ import com.xwray.groupie.GroupAdapter;
 import com.xwray.groupie.GroupieViewHolder;
 import com.xwray.groupie.Item;
 
+import java.lang.reflect.Array;
+import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class CurrentGameFragment extends Fragment {
 
     //все что происходит в текущей игре
+
     User currentUser;
     Game currentGame;
     GroupAdapter<GroupieViewHolder> adapter = new GroupAdapter<>();
-    ArrayList<User> users = new ArrayList<>();
+    ArrayList<User> totalPlayers = new ArrayList<>();
+    ArrayList<Question> questions = new ArrayList<>();
+    Question currentQuestion;
+    final boolean[] flag = {false};
+    boolean timerFlag = false;
 
     private CurrentGameFragmentBinding binding;
 
@@ -48,8 +60,138 @@ public class CurrentGameFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = CurrentGameFragmentBinding.inflate(inflater, container, false);
 
-        //после установки пользователя задается игра в методу ниже и заполняется адаптер
+        //после установки пользователя задается игра в методе ниже и заполняется адаптер с очками пользователей
         setCurrentUser();
+
+        binding.answer1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getContext(), "1", Toast.LENGTH_SHORT).show();
+
+                //Этот код добавляет +1 к колву ответов на данный вопрос
+                DatabaseReference ref = FirebaseDatabase.getInstance(MainActivity.DATABASE_PATH)
+                        .getReference("/games/" + currentGame.getPin() + "/questions/ID" + currentQuestion.getId() + "/answersnum/");
+                ref.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        Long k = (Long) snapshot.getValue();
+                        if (k == null) {
+                            ref.setValue(1);
+                        } else {
+                            ref.setValue(k+1);
+                        }
+                        ref.removeEventListener(this);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
+                DatabaseReference ref2 = FirebaseDatabase.getInstance(MainActivity.DATABASE_PATH)
+                        .getReference("/games/" + currentGame.getPin() + "/scores/" + currentUser.getUsername() + "/");
+                ref2.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        Long score = (Long) snapshot.getValue();
+                        if (currentQuestion.getAnswerOne().containsValue(true)) {
+                            if (score == null) {
+                                ref2.setValue(127);
+                            } else {
+                                ref2.setValue(score + 149);
+                            }
+                            ref2.removeEventListener(this);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
+                currentQuestion.getAnswerOne();
+            }
+        });
+
+        binding.answer2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getContext(), "2", Toast.LENGTH_SHORT).show();
+                DatabaseReference ref = FirebaseDatabase.getInstance(MainActivity.DATABASE_PATH)
+                        .getReference("/games/" + currentGame.getPin() + "/questions/ID" + currentQuestion.getId() + "/answersnum/");
+                ref.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        Long k = (Long) snapshot.getValue();
+                        if (k == null) {
+                            ref.setValue(1);
+                        } else {
+                            ref.setValue(k+1);
+                        }
+                        ref.removeEventListener(this);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+            }
+        });
+
+        binding.answer3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getContext(), "3", Toast.LENGTH_SHORT).show();
+                DatabaseReference ref = FirebaseDatabase.getInstance(MainActivity.DATABASE_PATH)
+                        .getReference("/games/" + currentGame.getPin() + "/questions/ID" + currentQuestion.getId() + "/answersnum/");
+                ref.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        Long k = (Long) snapshot.getValue();
+                        if (k == null) {
+                            ref.setValue(1);
+                        } else {
+                            ref.setValue(k+1);
+                        }
+                        ref.removeEventListener(this);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+            }
+        });
+
+        binding.answer4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getContext(), "4", Toast.LENGTH_SHORT).show();
+                DatabaseReference ref = FirebaseDatabase.getInstance(MainActivity.DATABASE_PATH)
+                        .getReference("/games/" + currentGame.getPin() + "/questions/ID" + currentQuestion.getId() + "/answersnum/");
+                ref.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        Long k = (Long) snapshot.getValue();
+                        if (k == null) {
+                            ref.setValue(1);
+                        } else {
+                            ref.setValue(k+1);
+                        }
+                        ref.removeEventListener(this);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+            }
+        });
 
         return binding.getRoot();
     }
@@ -107,6 +249,18 @@ public class CurrentGameFragment extends Fragment {
                                 if (user.getUsername().equals(currentUser.getUsername())) {
                                     currentGame = game;
                                     fillAdapter();
+                                    binding.currentPin.setText("ID: " + currentGame.getPin());
+                                    getCurrentGameQuestions(currentGame);
+
+                                    new Timer().schedule(new TimerTask() {
+                                        public void run() {
+                                            if (!timerFlag) {
+                                                setCurrentQuestion(currentGame);
+                                            } else {
+                                                this.cancel();
+                                            }
+                                        }
+                                    }, 0, 100);
                                 }
                             }
                         }
@@ -142,13 +296,14 @@ public class CurrentGameFragment extends Fragment {
     }
 
     public void fillAdapter() {
-        DatabaseReference ref = FirebaseDatabase.getInstance(MainActivity.DATABASE_PATH).getReference("/games/" + currentGame.getPin() + "/players/");
+        DatabaseReference ref = FirebaseDatabase.getInstance(MainActivity.DATABASE_PATH)
+                .getReference("/games/" + currentGame.getPin() + "/players/");
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot data : snapshot.getChildren()) {
                     User player = data.getValue(User.class);
-                    users.add(player);
+                    totalPlayers.add(player);
                     refreshAdapter();
                 }
             }
@@ -162,10 +317,113 @@ public class CurrentGameFragment extends Fragment {
 
     public void refreshAdapter() {
         adapter.clear();
-        for (User u : users) {
+        for (User u : totalPlayers) {
             adapter.add(new UserScoreItem(u));
         }
         binding.currentGameRecyclerView.setAdapter(adapter);
+    }
+
+    public void setCurrentQuestion(Game game) {
+        for (int i = 1; i < questions.size()+1; i++) {
+            /**
+             * если колво ответов на вопрос i в цикле меньше колва игроков,
+             * то этот вопрос устанавливается как вопрос в данный момент (i-1) у всех игроков после
+             * чего выхожу из цикла и удаляю слушатель на ссылку
+             * Если колво ответов на вопрос совпадает с колвом игроков то вопросом в данный момент
+             * будет вопрос i (отнимаю единицу потому что цикл начитается с 1)
+             * после чего выхожу из цикла и удаляю слушатель на ссылку
+             */
+            DatabaseReference ref = FirebaseDatabase.getInstance(MainActivity.DATABASE_PATH)
+                    .getReference("/games/" + game.getPin() + "/questions/ID" + i + "/answersnum/");
+            int finalI = i;
+            ref.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    Long answersCount = (Long) snapshot.getValue();
+
+                    if (answersCount == null || answersCount < totalPlayers.size()) {
+
+                        if ((currentQuestion == null) || (!currentQuestion.equals(questions.get(finalI-1)))) {
+                            currentQuestion = questions.get(finalI-1);
+                            refreshUi(currentQuestion);
+                        }
+                        currentQuestion = questions.get(finalI-1);
+
+                        flag[0] = true;
+                        ref.removeEventListener(this);
+                    } else {
+                        try {
+                            if (!currentQuestion.equals(questions.get(finalI))) {
+                                currentQuestion = questions.get(finalI);
+                                refreshUi(currentQuestion);
+                            }
+                        } catch (Exception e) {
+
+                            /**
+                             * если на последний вопрос ответ дали все игроки, то возникает исключение,
+                             * после обработке которого таймер останавливается и происходит переход
+                             * во фрагмент с результатами
+                             */
+                            timerFlag = true;
+                            e.printStackTrace();
+                            FragmentManager fm = getActivity().getSupportFragmentManager();
+                            FragmentTransaction ft = fm.beginTransaction();
+                            ft.replace(R.id.nav_host_fragment, new ResultsFragment());
+                            ft.addToBackStack(null);
+                            ft.commit();
+                        }
+
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+
+            if (flag[0] == true) {
+                break;
+            }
+        }
+    }
+
+    public void refreshUi(Question question) {
+        binding.currentQuestionText.setText(question.getQuestionText());
+        Picasso.get()
+                .load(question.getPhotoUrl())
+                .into(binding.imageView);
+        binding.answer1Tw.setText(question.getAnswerOne().keySet().toString());
+        binding.answer2Tw.setText(question.getAnswerTwo().keySet().toString());
+        binding.answer3Tw.setText(question.getAnswerThree().keySet().toString());
+        binding.answer4Tw.setText(question.getAnswerFour().keySet().toString());
+
+        binding.currentQuestionNum.setText(question.getId() + " " + getResources().getString(R.string.of) + " " + questions.size());
+
+        binding.answer1.setEnabled(true);
+        binding.answer2.setEnabled(true);
+        binding.answer3.setEnabled(true);
+        binding.answer4.setEnabled(true);
+    }
+
+    //обавляет вопросы в массив
+    public void getCurrentGameQuestions(Game game) {
+        DatabaseReference ref = FirebaseDatabase.getInstance(MainActivity.DATABASE_PATH)
+                .getReference("/games/" + game.getPin() + "/questions/");
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot data : snapshot.getChildren()) {
+                    Question question = data.getValue(Question.class);
+                    questions.add(question);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     class UserScoreItem extends Item<GroupieViewHolder> {

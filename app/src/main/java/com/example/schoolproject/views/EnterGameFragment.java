@@ -117,11 +117,16 @@ public class EnterGameFragment extends Fragment {
                             User user = dataSnapshot.getValue(User.class);
                             if (user != null) {
                                 if (user.getUsername().equals(currentUser.getUsername())) {
-                                    FragmentManager fm = getActivity().getSupportFragmentManager();
-                                    FragmentTransaction ft = fm.beginTransaction();
-                                    ft.replace(R.id.nav_host_fragment, new CurrentGameFragment());
-                                    ft.addToBackStack(null);
-                                    ft.commit();
+                                    try {
+                                        FragmentManager fm = getActivity().getSupportFragmentManager();
+                                        FragmentTransaction ft = fm.beginTransaction();
+                                        ft.replace(R.id.nav_host_fragment, new CurrentGameFragment());
+                                        ft.addToBackStack(null);
+                                        ft.commit();
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+
                                 }
                             }
                         }

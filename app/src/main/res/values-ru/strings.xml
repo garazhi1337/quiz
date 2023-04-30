@@ -8,7 +8,7 @@
     <string name="button_reg">Регистрация</string>
     <string name="alreadyhave">Уже есть аккаунт? Войти</string>
     <string name="enter">Войти</string>
-    <string name="enterpin">Введите PIN</string>
+    <string name="enterpin">Введите ID</string>
     <string name="login">Войти</string>
     <string name="creategame">Создать игру</string>
     <string name="warning1">Сначала зарегестрируйтесь или войдите</string>
@@ -30,8 +30,9 @@
     <string name="author">Автор: </string>
     <string name="members">Участники: </string>
     <string name="qnum">Кол-во вопросов: </string>
-    <string name="pin">PIN: </string>
+    <string name="pin">ID: </string>
     <string name="gamenotstarted">Игра не начата</string>
     <string name="gamestarted">Игра идет</string>
     <string name="warning2">Игра не найдена</string>
+    <string name="of">из</string>
 </resources>

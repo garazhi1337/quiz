@@ -146,6 +146,7 @@ public class CreateGameFragment extends Fragment {
         for (Question question : arrayList) {
             //добавляю строку, чтобы не переводилось в
             // инт и нормально записывалось как map а не arraylist
+            question.setId(Integer.toString(i));
             hashMap.put("ID" + i, question);
             i++;
         }

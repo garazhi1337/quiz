@@ -8,7 +8,7 @@
     <string name="button_reg">Registration</string>
     <string name="alreadyhave">Already have an account? Log in</string>
     <string name="enter">Enter</string>
-    <string name="enterpin">Enter PIN</string>
+    <string name="enterpin">Enter ID</string>
     <string name="login">Log in</string>
     <string name="creategame">Create game</string>
     <string name="warning1">You have to sign up or log in first</string>
@@ -30,9 +30,10 @@
     <string name="author">Author: </string>
     <string name="members">Members: </string>
     <string name="qnum">Questions number: </string>
-    <string name="pin">PIN: </string>
+    <string name="pin">ID: </string>
     <string name="gamenotstarted">The game has not started</string>
     <string name="gamestarted">The game is on</string>
     <string name="warning2">The game is not found</string>
+    <string name="of">of</string>
 
 </resources>

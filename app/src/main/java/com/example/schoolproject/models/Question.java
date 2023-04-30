@@ -15,7 +15,7 @@ public class Question implements Parcelable {
     private HashMap<String, Boolean> answerFour;
     private String questionText;
     private String photoUrl;
-
+    private String id;
 
     protected Question(Parcel in) {
         if (in.readByte() == 0) {
@@ -45,15 +45,6 @@ public class Question implements Parcelable {
 
     public void setPhotoUrl(String photoUrl) {
         this.photoUrl = photoUrl;
-    }
-
-    public Question(Integer seconds, HashMap<String, Boolean> answerOne, HashMap<String, Boolean> answerTwo, HashMap<String, Boolean> answerThree, HashMap<String, Boolean> answerFour, String questionText) {
-        this.seconds = seconds;
-        this.answerOne = answerOne;
-        this.answerTwo = answerTwo;
-        this.answerThree = answerThree;
-        this.answerFour = answerFour;
-        this.questionText = questionText;
     }
 
     public Question() {
@@ -110,6 +101,14 @@ public class Question implements Parcelable {
     @Override
     public int describeContents() {
         return 0;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     @Override
