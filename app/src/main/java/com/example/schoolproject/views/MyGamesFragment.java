@@ -11,6 +11,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.schoolproject.MainActivity;
@@ -19,6 +21,7 @@ import com.example.schoolproject.databinding.MyGamesFragmentBinding;
 import com.example.schoolproject.models.Game;
 import com.example.schoolproject.models.User;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -43,41 +46,49 @@ public class MyGamesFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = MyGamesFragmentBinding.inflate(inflater, container, false);
 
-        adapter = new GroupAdapter<>();
-        games = new ArrayList<>();
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            adapter = new GroupAdapter<>();
+            games = new ArrayList<>();
 
 
-        DatabaseReference ref = FirebaseDatabase.getInstance(MainActivity.DATABASE_PATH).getReference("/games/");
-        ref.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                Game game = snapshot.getValue(Game.class);
-                if (game.getAuthor().equals(MainActivity.currentUser.getUsername())) {
-                    games.add(game);
-                    refreshAdapter();
+            DatabaseReference ref = FirebaseDatabase.getInstance(MainActivity.DATABASE_PATH).getReference("/games/");
+            ref.addChildEventListener(new ChildEventListener() {
+                @Override
+                public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                    Game game = snapshot.getValue(Game.class);
+                    if (game.getAuthor().equals(MainActivity.currentUser.getUsername())) {
+                        games.add(game);
+                        refreshAdapter();
+                    }
                 }
-            }
 
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                @Override
+                public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
 
-            }
+                }
 
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+                @Override
+                public void onChildRemoved(@NonNull DataSnapshot snapshot) {
 
-            }
+                }
 
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                @Override
+                public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
 
-            }
+                }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
 
-            }
-        });
+                }
+            });
+        } else {
+            FragmentManager fm = getActivity().getSupportFragmentManager();
+            FragmentTransaction ft = fm.beginTransaction();
+            ft.replace(R.id.nav_host_fragment, new RegistrationFragment());
+            ft.addToBackStack(null);
+            ft.commit();
+        }
 
         return binding.getRoot();
     }
@@ -91,6 +102,7 @@ public class MyGamesFragment extends Fragment {
         binding.recyclerView.setAdapter(adapter);
     }
 
+    //элемент в адаптере
     class MyGameItem extends Item<GroupieViewHolder> {
 
         private Game game;

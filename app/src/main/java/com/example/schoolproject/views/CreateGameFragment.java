@@ -24,6 +24,7 @@ import com.example.schoolproject.models.Game;
 import com.example.schoolproject.models.Question;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
@@ -47,44 +48,55 @@ public class CreateGameFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = CreateGameFragmentBinding.inflate(inflater, container, false);
-        adapter = new GroupAdapter<>();
 
-        //получение списка вопросов из creategamefragment
-        if (this.getArguments() != null) {
-            Bundle data = this.getArguments();
-            questions = data.getParcelableArrayList("CREATE_Q");
+        //проверка зарегестрирован ли пользователь
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+
+            adapter = new GroupAdapter<>();
+
+            //получение списка вопросов из creategamefragment
+            if (this.getArguments() != null) {
+                Bundle data = this.getArguments();
+                questions = data.getParcelableArrayList("CREATE_Q");
+            } else {
+                questions = new ArrayList<>();
+            }
+
+            for (Question q : questions) {
+                adapter.add(new QuestionItem(q));
+            }
+
+            binding.recyclerView.setAdapter(adapter);
+
+            binding.addQuestionBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    FragmentManager fm = getActivity().getSupportFragmentManager();
+                    FragmentTransaction ft = fm.beginTransaction();
+                    CreateQuestionFragment fragment = new CreateQuestionFragment();
+                    Bundle data = new Bundle();
+                    data.putParcelableArrayList("CREATE_G", questions);
+                    fragment.setArguments(data);
+                    ft.replace(R.id.nav_host_fragment, fragment);
+                    ft.addToBackStack(null);
+                    ft.commit();
+                }
+            });
+
+            binding.saveGameBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    saveGame();
+                }
+            });
         } else {
-            questions = new ArrayList<>();
+            //если пользователь не зарегестрирован перенаправляет во фрагмент с регистрацией/входом
+            FragmentManager fm = getActivity().getSupportFragmentManager();
+            FragmentTransaction ft = fm.beginTransaction();
+            ft.replace(R.id.nav_host_fragment, new RegistrationFragment());
+            ft.addToBackStack(null);
+            ft.commit();
         }
-
-        for (Question q : questions) {
-            adapter.add(new QuestionItem(q));
-        }
-
-        binding.recyclerView.setAdapter(adapter);
-
-        binding.addQuestionBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                FragmentManager fm = getActivity().getSupportFragmentManager();
-                FragmentTransaction ft = fm.beginTransaction();
-                CreateQuestionFragment fragment = new CreateQuestionFragment();
-                Bundle data = new Bundle();
-                data.putParcelableArrayList("CREATE_G", questions);
-                fragment.setArguments(data);
-                ft.replace(R.id.nav_host_fragment, fragment);
-                ft.addToBackStack(null);
-                ft.commit();
-            }
-        });
-
-        binding.saveGameBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                saveGame();
-            }
-        });
-
 
 
         return binding.getRoot();
@@ -129,12 +141,10 @@ public class CreateGameFragment extends Fragment {
     }
 
     public String getRandomNumberString() {
-        // It will generate 6 digit random Number.
-        // from 0 to 999999
+        //генерирует шести значное число
         Random rnd = new Random();
         int number = rnd.nextInt(999999);
 
-        // this will convert any number sequence into 6 character.
         return String.format("%06d", number);
     }
 

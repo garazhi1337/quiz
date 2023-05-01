@@ -256,6 +256,9 @@ public class CurrentGameFragment extends Fragment {
                                         public void run() {
                                             if (!timerFlag) {
                                                 setCurrentQuestion(currentGame);
+                                                if (currentQuestion != null) {
+                                                    System.out.println(currentQuestion.getId());
+                                                }
                                             } else {
                                                 this.cancel();
                                             }
@@ -324,14 +327,13 @@ public class CurrentGameFragment extends Fragment {
     }
 
     public void setCurrentQuestion(Game game) {
+        flag[0] = false;
         for (int i = 1; i < questions.size()+1; i++) {
             /**
              * если колво ответов на вопрос i в цикле меньше колва игроков,
-             * то этот вопрос устанавливается как вопрос в данный момент (i-1) у всех игроков после
-             * чего выхожу из цикла и удаляю слушатель на ссылку
+             * то этот вопрос устанавливается как вопрос в данный момент (i-1) у всех игроков
              * Если колво ответов на вопрос совпадает с колвом игроков то вопросом в данный момент
              * будет вопрос i (отнимаю единицу потому что цикл начитается с 1)
-             * после чего выхожу из цикла и удаляю слушатель на ссылку
              */
             DatabaseReference ref = FirebaseDatabase.getInstance(MainActivity.DATABASE_PATH)
                     .getReference("/games/" + game.getPin() + "/questions/ID" + i + "/answersnum/");
@@ -341,39 +343,37 @@ public class CurrentGameFragment extends Fragment {
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     Long answersCount = (Long) snapshot.getValue();
 
-                    if (answersCount == null || answersCount < totalPlayers.size()) {
+                    if ((answersCount == null || answersCount < totalPlayers.size()) && (finalI < questions.size())) {
 
-                        if ((currentQuestion == null) || (!currentQuestion.equals(questions.get(finalI-1)))) {
+                        //Toast.makeText(getContext(), "ostalsya v etom je", Toast.LENGTH_SHORT).show();
+                        if (currentQuestion == null) {
                             currentQuestion = questions.get(finalI-1);
                             refreshUi(currentQuestion);
                         }
-                        currentQuestion = questions.get(finalI-1);
 
-                        flag[0] = true;
-                        ref.removeEventListener(this);
-                    } else {
-                        try {
-                            if (!currentQuestion.equals(questions.get(finalI))) {
-                                currentQuestion = questions.get(finalI);
-                                refreshUi(currentQuestion);
-                            }
-                        } catch (Exception e) {
-
-                            /**
-                             * если на последний вопрос ответ дали все игроки, то возникает исключение,
-                             * после обработке которого таймер останавливается и происходит переход
-                             * во фрагмент с результатами
-                             */
-                            timerFlag = true;
-                            e.printStackTrace();
-                            FragmentManager fm = getActivity().getSupportFragmentManager();
-                            FragmentTransaction ft = fm.beginTransaction();
-                            ft.replace(R.id.nav_host_fragment, new ResultsFragment());
-                            ft.addToBackStack(null);
-                            ft.commit();
+                        //flag[0] = true;
+                        //ref.removeEventListener(this);
+                    } else if (answersCount != null && answersCount >= totalPlayers.size() && finalI < questions.size()) {
+                        if ((currentQuestion != null) && (!currentQuestion.equals(questions.get(finalI)))) {
+                            //Toast.makeText(getContext(), finalI + "perehod na sleduyushii" + questions.size(), Toast.LENGTH_SHORT).show();
+                            currentQuestion = questions.get(finalI);
+                            refreshUi(currentQuestion);
                         }
 
+                        currentQuestion = questions.get(finalI);
+
+                    } else if (answersCount != null && answersCount >= totalPlayers.size() && finalI == questions.size()) {
+                        currentQuestion = questions.get(questions.size()-1);
+                        refreshUi(currentQuestion);
+                        //Toast.makeText(getContext(), finalI + "final" + questions.size(), Toast.LENGTH_SHORT).show();
+                        FragmentManager fm = getActivity().getSupportFragmentManager();
+                        FragmentTransaction ft = fm.beginTransaction();
+                        ft.replace(R.id.nav_host_fragment, new ResultsFragment());
+                        ft.addToBackStack(null);
+                        ft.commit();
+                        timerFlag = true;
                     }
+
                 }
 
                 @Override
@@ -413,6 +413,7 @@ public class CurrentGameFragment extends Fragment {
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                questions.clear();
                 for (DataSnapshot data : snapshot.getChildren()) {
                     Question question = data.getValue(Question.class);
                     questions.add(question);

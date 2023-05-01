@@ -35,4 +35,6 @@
     <string name="gamestarted">Игра идет</string>
     <string name="warning2">Игра не найдена</string>
     <string name="of">из</string>
+    <string name="notregistrated">Не зарегистрирован</string>
+    <string name="results">Результаты:</string>
 </resources>

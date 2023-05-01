@@ -35,5 +35,6 @@
     <string name="gamestarted">The game is on</string>
     <string name="warning2">The game is not found</string>
     <string name="of">of</string>
-
+    <string name="notregistrated">Not registered</string>
+    <string name="results">Results:</string>
 </resources>

@@ -43,128 +43,138 @@ public class EnterGameFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = EnterGameFragmentBinding.inflate(inflater, container, false);
 
-        setCurrentUser();
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
 
-        binding.enterGameBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                binding.progressCircular.setVisibility(View.VISIBLE);
-                DatabaseReference ref = FirebaseDatabase.getInstance(MainActivity.DATABASE_PATH).getReference("/games/");
-                ref.addChildEventListener(new ChildEventListener() {
-                    @Override
-                    public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                        Game game = snapshot.getValue(Game.class);
-                        if (game.getPin().equals(binding.enterPin.getText().toString().trim()) && game.getStarted() == false) {
-                            DatabaseReference ref2 = FirebaseDatabase.getInstance(MainActivity.DATABASE_PATH)
-                                    .getReference("/games/" + game.getPin() + "/players/" + MainActivity.currentUser.getUsername() + "/");
-                            ref2.setValue(MainActivity.currentUser)
-                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void unused) {
-                                            binding.progressCircular.setVisibility(View.INVISIBLE);
+
+            setCurrentUser();
+
+            binding.enterGameBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    binding.progressCircular.setVisibility(View.VISIBLE);
+                    DatabaseReference ref = FirebaseDatabase.getInstance(MainActivity.DATABASE_PATH).getReference("/games/");
+                    ref.addChildEventListener(new ChildEventListener() {
+                        @Override
+                        public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                            Game game = snapshot.getValue(Game.class);
+                            if (game.getPin().equals(binding.enterPin.getText().toString().trim()) && game.getStarted() == false) {
+                                DatabaseReference ref2 = FirebaseDatabase.getInstance(MainActivity.DATABASE_PATH)
+                                        .getReference("/games/" + game.getPin() + "/players/" + MainActivity.currentUser.getUsername() + "/");
+                                ref2.setValue(MainActivity.currentUser)
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void unused) {
+                                                binding.progressCircular.setVisibility(View.INVISIBLE);
+                                                FragmentManager fm = getActivity().getSupportFragmentManager();
+                                                FragmentTransaction ft = fm.beginTransaction();
+                                                ft.replace(R.id.nav_host_fragment, new CurrentGameFragment());
+                                                ft.addToBackStack(null);
+                                                ft.commit();
+                                            }
+                                        })
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                binding.progressCircular.setVisibility(View.INVISIBLE);
+                                                Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                            }
+                        }
+
+                        @Override
+                        public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+                        }
+
+                        @Override
+                        public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+                        }
+
+                        @Override
+                        public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+                }
+            });
+
+            //если пошльзователь уже есть в какойто игре , то при заходе на заход его перекидывает в ту игру
+            DatabaseReference ref = FirebaseDatabase.getInstance(MainActivity.DATABASE_PATH).getReference("/games/");
+            ref.addChildEventListener(new ChildEventListener() {
+                @Override
+                public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                    Game game = snapshot.getValue(Game.class);
+                    DatabaseReference ref2 = FirebaseDatabase.getInstance(MainActivity.DATABASE_PATH)
+                            .getReference("/games/" + game.getPin() + "/players/");
+                    ref2.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                User user = dataSnapshot.getValue(User.class);
+                                if (user != null) {
+                                    if (user.getUsername().equals(currentUser.getUsername())) {
+                                        try {
                                             FragmentManager fm = getActivity().getSupportFragmentManager();
                                             FragmentTransaction ft = fm.beginTransaction();
                                             ft.replace(R.id.nav_host_fragment, new CurrentGameFragment());
                                             ft.addToBackStack(null);
                                             ft.commit();
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
                                         }
-                                    })
-                                    .addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            binding.progressCircular.setVisibility(View.INVISIBLE);
-                                            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
-                        }
-                    }
 
-                    @Override
-                    public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
-                    }
-
-                    @Override
-                    public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-
-                    }
-
-                    @Override
-                    public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-            }
-        });
-
-        //если пошльзователь уже есть в какойто игре , то при заходе на заход его перекидывает в ту игру
-        DatabaseReference ref = FirebaseDatabase.getInstance(MainActivity.DATABASE_PATH).getReference("/games/");
-        ref.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                Game game = snapshot.getValue(Game.class);
-                DatabaseReference ref2 = FirebaseDatabase.getInstance(MainActivity.DATABASE_PATH)
-                        .getReference("/games/" + game.getPin() + "/players/");
-                ref2.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                            User user = dataSnapshot.getValue(User.class);
-                            if (user != null) {
-                                if (user.getUsername().equals(currentUser.getUsername())) {
-                                    try {
-                                        FragmentManager fm = getActivity().getSupportFragmentManager();
-                                        FragmentTransaction ft = fm.beginTransaction();
-                                        ft.replace(R.id.nav_host_fragment, new CurrentGameFragment());
-                                        ft.addToBackStack(null);
-                                        ft.commit();
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
                                     }
-
                                 }
                             }
                         }
-                    }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
 
-                    }
-                });
-            }
+                        }
+                    });
+                }
 
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                @Override
+                public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
 
-            }
+                }
 
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+                @Override
+                public void onChildRemoved(@NonNull DataSnapshot snapshot) {
 
-            }
+                }
 
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                @Override
+                public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
 
-            }
+                }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
 
-            }
-        });
+                }
+            });
+        } else {
+            FragmentManager fm = getActivity().getSupportFragmentManager();
+            FragmentTransaction ft = fm.beginTransaction();
+            ft.replace(R.id.nav_host_fragment, new RegistrationFragment());
+            ft.addToBackStack(null);
+            ft.commit();
+        }
 
         return binding.getRoot();
     }
 
     public void setCurrentUser() {
-        DatabaseReference ref = FirebaseDatabase.getInstance(MainActivity.DATABASE_PATH).getReference("/users");
+        DatabaseReference ref = FirebaseDatabase.getInstance(MainActivity.DATABASE_PATH).getReference("/users/");
         ref.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {

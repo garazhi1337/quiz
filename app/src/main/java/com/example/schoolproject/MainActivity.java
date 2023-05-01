@@ -150,17 +150,21 @@ public class MainActivity extends AppCompatActivity {
                 User user = snapshot.getValue(User.class);
                 //Toast.makeText(MainActivity.this, user.getUsername(), Toast.LENGTH_SHORT).show();
 
-                if (user.getUid().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
-                    currentUser = user;
-                    View header = activityMainBinding.navView.getHeaderView(0);
-                    CircleImageView imageView = (CircleImageView) header.findViewById(R.id.currentPfp);
-                    TextView textView = (TextView) header.findViewById(R.id.currentUsername);
-                    TextView textView2 = (TextView) header.findViewById(R.id.currentEmail);
-                    Picasso.get()
-                            .load(currentUser.getPfpLink())
-                            .into(imageView);
-                    textView.setText(currentUser.getUsername());
-                    textView2.setText(currentUser.getEmail());
+                try {
+                    if (user.getUid().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+                        currentUser = user;
+                        View header = activityMainBinding.navView.getHeaderView(0);
+                        CircleImageView imageView = (CircleImageView) header.findViewById(R.id.currentPfp);
+                        TextView textView = (TextView) header.findViewById(R.id.currentUsername);
+                        TextView textView2 = (TextView) header.findViewById(R.id.currentEmail);
+                        Picasso.get()
+                                .load(currentUser.getPfpLink())
+                                .into(imageView);
+                        textView.setText(currentUser.getUsername());
+                        textView2.setText(currentUser.getEmail());
+                    }
+                } catch (Exception e) {
+                    //пусть оно лучше будет пустое чтобы не засорять логи
                 }
             }
 
