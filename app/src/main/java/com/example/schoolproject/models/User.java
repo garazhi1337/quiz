@@ -1,6 +1,11 @@
 package com.example.schoolproject.models;
 
-public class User {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import androidx.annotation.NonNull;
+
+public class User implements Parcelable {
 
     private String username, password, email, uid, pfpLink;
 
@@ -52,6 +57,16 @@ public class User {
     }
 
     public User() {
+
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(@NonNull Parcel dest, int flags) {
 
     }
 }

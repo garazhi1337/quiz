@@ -1,11 +1,16 @@
 package com.example.schoolproject.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import androidx.annotation.NonNull;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import kotlin.jvm.internal.BooleanSpreadBuilder;
 
-public class Game {
+public class Game implements Parcelable {
     private String pin;
     private String title;
     //private ArrayList<User> players;
@@ -63,5 +68,15 @@ public class Game {
 
     public void setStarted(Boolean started) {
         isStarted = started;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(@NonNull Parcel dest, int flags) {
+
     }
 }

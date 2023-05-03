@@ -34,12 +34,14 @@
             android:padding="10dp"></EditText>
 
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:background="@drawable/volumablebtn"
             android:id="@+id/login_btn"
             android:layout_width="match_parent"
             android:layout_height="45dp"
-            android:background="@drawable/shape_1"
-            android:text="@string/login"></Button>
+            android:text="@string/login"></androidx.appcompat.widget.AppCompatButton>
 
         <TextView
             android:id="@+id/regestration"

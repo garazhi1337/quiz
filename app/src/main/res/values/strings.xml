@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">SchoolProject</string>
-    <string name="enter_game">Enter game</string>
+    <string name="enter_game">Enter quiz</string>
     <string name="registration">Sign up</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
@@ -10,12 +10,12 @@
     <string name="enter">Enter</string>
     <string name="enterpin">Enter ID</string>
     <string name="login">Log in</string>
-    <string name="creategame">Create game</string>
+    <string name="creategame">Create quiz</string>
     <string name="warning1">You have to sign up or log in first</string>
     <string name="title">Title</string>
-    <string name="savegame">Save game</string>
+    <string name="savegame">Save quiz</string>
     <string name="addquestiom">Add question</string>
-    <string name="mygames">My games</string>
+    <string name="mygames">My quizzes</string>
     <string name="questiontext">Question text</string>
     <string name="addimage">Add image</string>
     <string name="cancel">Cancel</string>
@@ -31,10 +31,14 @@
     <string name="members">Members: </string>
     <string name="qnum">Questions number: </string>
     <string name="pin">ID: </string>
-    <string name="gamenotstarted">The game has not started</string>
-    <string name="gamestarted">The game is on</string>
-    <string name="warning2">The game is not found</string>
+    <string name="gamenotstarted">The quiz has not started</string>
+    <string name="gamestarted">The quiz is on</string>
+    <string name="warning2">The quiz is not found</string>
     <string name="of">of</string>
     <string name="notregistrated">Not registered</string>
     <string name="results">Results:</string>
+    <string name="wait">Wait until the quiz is started...</string>
+    <string name="alreadystarted">The quiz has already started</string>
+    <string name="notexist">The quiz with such ID does not exist</string>
+    <string name="checkfields">Check the fields to be filled in</string>
 </resources>

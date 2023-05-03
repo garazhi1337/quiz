@@ -59,12 +59,14 @@
             android:background="@drawable/shape2"
             android:layout_marginBottom="10dp"></EditText>
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:background="@drawable/volumablebtn"
             android:text="@string/registration"
             android:id="@+id/reg_btn"
             android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:background="@drawable/shape_1"></Button>
+            android:layout_height="45dp"></androidx.appcompat.widget.AppCompatButton>
 
         <TextView
             android:layout_width="match_parent"

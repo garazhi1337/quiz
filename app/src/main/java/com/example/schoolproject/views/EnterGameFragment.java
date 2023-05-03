@@ -1,5 +1,6 @@
 package com.example.schoolproject.views;
 
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -79,6 +80,12 @@ public class EnterGameFragment extends Fragment {
                                                 Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
                                             }
                                         });
+                            } else if (game.getPin().equals(binding.enterPin.getText().toString().trim()) && game.getStarted() == true){
+                                binding.progressCircular.setVisibility(View.INVISIBLE);
+                                Toast.makeText(getContext(), getResources().getString(R.string.alreadystarted), Toast.LENGTH_SHORT).show();
+                            } else {
+                                binding.progressCircular.setVisibility(View.INVISIBLE);
+                                Toast.makeText(getContext(), getResources().getString(R.string.notexist), Toast.LENGTH_SHORT).show();
                             }
                         }
 

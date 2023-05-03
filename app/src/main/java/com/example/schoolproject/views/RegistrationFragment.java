@@ -58,25 +58,40 @@ public class RegistrationFragment extends Fragment {
         binding.regBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FirebaseAuth.getInstance().createUserWithEmailAndPassword(binding.email.getText().toString(), binding.password.getText().toString())
-                        .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
-                            @Override
-                            public void onSuccess(AuthResult authResult) {
-                                uid = authResult.getUser().getUid();
+                try {
+                    FirebaseAuth.getInstance().createUserWithEmailAndPassword(binding.email.getText().toString(), binding.password.getText().toString())
+                            .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                                @Override
+                                public void onSuccess(AuthResult authResult) {
+                                    uid = authResult.getUser().getUid();
 
-                                if (photoUri != null) {
-                                    uploadUserToDatabaseWithPfp(photoUri);
-                                } else {
-                                    uploadUserToDatabaseWithoutPfp();
+                                    if (photoUri != null) {
+                                        try {
+                                            uploadUserToDatabaseWithPfp(photoUri);
+                                        } catch (Exception e) {
+                                            Toast.makeText(getContext(), getResources().getString(R.string.checkfields), Toast.LENGTH_SHORT).show();
+                                        }
+
+                                    } else {
+                                        try {
+                                            uploadUserToDatabaseWithoutPfp();
+                                        } catch (Exception e) {
+                                            Toast.makeText(getContext(), getResources().getString(R.string.checkfields), Toast.LENGTH_SHORT).show();
+                                        }
+
+                                    }
                                 }
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(getContext(), "Ошибка: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                            }
-                        });
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Toast.makeText(getContext(), "Ошибка: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                } catch (Exception e) {
+                    Toast.makeText(getContext(), getResources().getString(R.string.checkfields), Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
 

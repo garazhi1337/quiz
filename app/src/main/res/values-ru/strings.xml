@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">SchoolProject</string>
-    <string name="enter_game">Войти в игру</string>
+    <string name="enter_game">Войти в опрос</string>
     <string name="registration">Регистрация</string>
     <string name="username">Имя пользователя</string>
     <string name="password">Пароль</string>
@@ -10,12 +10,12 @@
     <string name="enter">Войти</string>
     <string name="enterpin">Введите ID</string>
     <string name="login">Войти</string>
-    <string name="creategame">Создать игру</string>
+    <string name="creategame">Создать опрос</string>
     <string name="warning1">Сначала зарегестрируйтесь или войдите</string>
     <string name="title">Заголовок</string>
-    <string name="savegame">Сохранить игру</string>
-    <string name="addquestiom">Добавить вопрос</string>
-    <string name="mygames">Мои игры</string>
+    <string name="savegame">Сохр. опрос</string>
+    <string name="addquestiom">Доб. вопрос</string>
+    <string name="mygames">Мои опросы</string>
     <string name="questiontext">Текст вопроса</string>
     <string name="addimage">Добавить изображение</string>
     <string name="cancel">Отменить</string>
@@ -31,10 +31,14 @@
     <string name="members">Участники: </string>
     <string name="qnum">Кол-во вопросов: </string>
     <string name="pin">ID: </string>
-    <string name="gamenotstarted">Игра не начата</string>
-    <string name="gamestarted">Игра идет</string>
-    <string name="warning2">Игра не найдена</string>
+    <string name="gamenotstarted">Опрос не начат</string>
+    <string name="gamestarted">Опрос идет</string>
+    <string name="warning2">Опрос не найден</string>
     <string name="of">из</string>
     <string name="notregistrated">Не зарегистрирован</string>
     <string name="results">Результаты:</string>
+    <string name="wait">Дождитесь начала опроса...</string>
+    <string name="alreadystarted">Опрос уже начался</string>
+    <string name="notexist">Опроса с таким ID не существует</string>
+    <string name="checkfields">Проверьте заполняемые поля</string>
 </resources>

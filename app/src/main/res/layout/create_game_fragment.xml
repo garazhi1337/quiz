@@ -54,20 +54,25 @@
                 android:layout_centerHorizontal="true"
                 android:layout_margin="10dp">
 
-                <Button
+                <androidx.appcompat.widget.AppCompatButton
+                    android:textStyle="bold"
+                    android:textColor="@color/white"
+                    android:background="@drawable/volumablebtn"
                     android:id="@+id/save_game_btn"
                     android:layout_width="170dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="50dp"
                     android:text="@string/savegame"
                     android:layout_marginRight="10dp"
-                    android:background="@drawable/shape2"></Button>
+                ></androidx.appcompat.widget.AppCompatButton>
 
-                <Button
+                <androidx.appcompat.widget.AppCompatButton
+                    android:textStyle="bold"
+                    android:textColor="@color/white"
                     android:id="@+id/add_question_btn"
                     android:layout_width="170dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="50dp"
                     android:text="@string/addquestiom"
-                    android:background="@drawable/shape2"></Button>
+                    android:background="@drawable/volumablebtn"></androidx.appcompat.widget.AppCompatButton>
             </LinearLayout>
         </RelativeLayout>
 

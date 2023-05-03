@@ -1,6 +1,7 @@
 package com.example.schoolproject.views;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +38,7 @@ import com.xwray.groupie.Item;
 import java.lang.reflect.Array;
 import java.sql.Time;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -193,6 +195,24 @@ public class CurrentGameFragment extends Fragment {
             }
         });
 
+        /**
+        new Handler().post(new Runnable() {
+            @Override
+            public void run() {
+                // Code here will run in UI thread
+                if (currentQuestion != null) {
+                    refreshUi(currentQuestion);
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+
+            }
+        });
+         */
+
         return binding.getRoot();
     }
 
@@ -248,6 +268,36 @@ public class CurrentGameFragment extends Fragment {
                             if (user != null) {
                                 if (user.getUsername().equals(currentUser.getUsername())) {
                                     currentGame = game;
+
+                                    DatabaseReference isStartedRef = FirebaseDatabase.getInstance(MainActivity.DATABASE_PATH)
+                                            .getReference("/games/" + currentGame.getPin());
+                                    isStartedRef.addValueEventListener(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                            HashMap<String, Boolean> isStarted = (HashMap<String, Boolean>) snapshot.getValue();
+                                            if (!isStarted.containsValue(Boolean.TRUE)) {
+                                                binding.currentPin.setVisibility(View.INVISIBLE);
+                                                binding.currentQuestionNum.setVisibility(View.INVISIBLE);
+                                                binding.currentQuestionText.setVisibility(View.INVISIBLE);
+                                                binding.scrollView2.setVisibility(View.INVISIBLE);
+
+                                                binding.innerlayout.setVisibility(View.VISIBLE);
+                                            } else {
+                                                binding.currentPin.setVisibility(View.VISIBLE);
+                                                binding.currentQuestionNum.setVisibility(View.VISIBLE);
+                                                binding.currentQuestionText.setVisibility(View.VISIBLE);
+                                                binding.scrollView2.setVisibility(View.VISIBLE);
+
+                                                binding.innerlayout.setVisibility(View.INVISIBLE);
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError error) {
+
+                                        }
+                                    });
+
                                     fillAdapter();
                                     binding.currentPin.setText("ID: " + currentGame.getPin());
                                     getCurrentGameQuestions(currentGame);
@@ -328,6 +378,7 @@ public class CurrentGameFragment extends Fragment {
 
     public void setCurrentQuestion(Game game) {
         flag[0] = false;
+
         for (int i = 1; i < questions.size()+1; i++) {
             /**
              * если колво ответов на вопрос i в цикле меньше колва игроков,
@@ -368,7 +419,14 @@ public class CurrentGameFragment extends Fragment {
                         //Toast.makeText(getContext(), finalI + "final" + questions.size(), Toast.LENGTH_SHORT).show();
                         FragmentManager fm = getActivity().getSupportFragmentManager();
                         FragmentTransaction ft = fm.beginTransaction();
-                        ft.replace(R.id.nav_host_fragment, new ResultsFragment());
+                        ResultsFragment fragment = new ResultsFragment();
+
+                        Bundle data = new Bundle();
+                        data.putParcelable("CURR_GAME", currentGame);
+                        data.putParcelableArrayList("CURR_MEMBERS", totalPlayers);
+                        fragment.setArguments(data);
+
+                        ft.replace(R.id.nav_host_fragment, fragment);
                         ft.addToBackStack(null);
                         ft.commit();
                         timerFlag = true;

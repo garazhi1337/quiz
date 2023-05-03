@@ -27,14 +27,16 @@
             android:hint="@string/enterpin"
             android:textAlignment="center"></EditText>
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:background="@drawable/volumablebtn"
             android:id="@+id/enterGameBtn"
             android:layout_marginTop="15dp"
-            android:background="@drawable/shape_1"
             android:layout_below="@+id/enter_pin"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:text="@string/enter"></Button>
+            android:text="@string/enter"></androidx.appcompat.widget.AppCompatButton>
     </RelativeLayout>
 
     <ProgressBar
