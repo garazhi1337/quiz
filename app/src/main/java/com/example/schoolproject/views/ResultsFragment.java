@@ -97,8 +97,6 @@ public class ResultsFragment extends Fragment {
 
                 }
             });
-
-            userScore.setText("null");
         }
 
         @Override

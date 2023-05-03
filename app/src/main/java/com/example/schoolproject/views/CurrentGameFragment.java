@@ -504,7 +504,24 @@ public class CurrentGameFragment extends Fragment {
                     .into(imageView);
             username.setText(user.getUsername());
 
-            userScore.setText("null");
+            DatabaseReference ref = FirebaseDatabase.getInstance(MainActivity.DATABASE_PATH)
+                    .getReference("/games/" + currentGame.getPin() + "/scores/" + user.getUsername() + "/");
+            ref.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    Long score = (Long) snapshot.getValue();
+                    if (score != null) {
+                        userScore.setText(Long.toString(score));
+                    } else {
+                        userScore.setText("0");
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
         }
 
         @Override
