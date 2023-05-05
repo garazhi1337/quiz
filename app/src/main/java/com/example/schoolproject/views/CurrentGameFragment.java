@@ -332,6 +332,7 @@ public class CurrentGameFragment extends Fragment {
         });
     }
 
+
     public void fillAdapter() {
         DatabaseReference ref = FirebaseDatabase.getInstance(MainActivity.DATABASE_PATH)
                 .getReference("/games/" + currentGame.getPin() + "/players/");
