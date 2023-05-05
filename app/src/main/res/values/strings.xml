@@ -41,4 +41,5 @@
     <string name="alreadystarted">The quiz has already started</string>
     <string name="notexist">The quiz with such ID does not exist</string>
     <string name="checkfields">Check the fields to be filled in</string>
+    <string name="cantaccess">Cant access the quiz</string>
 </resources>

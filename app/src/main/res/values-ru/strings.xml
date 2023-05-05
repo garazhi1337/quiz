@@ -41,4 +41,5 @@
     <string name="alreadystarted">Опрос уже начался</string>
     <string name="notexist">Опроса с таким ID не существует</string>
     <string name="checkfields">Проверьте заполняемые поля</string>
+    <string name="cantaccess">Не удалось подключиться с опросу</string>
 </resources>

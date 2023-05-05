@@ -195,23 +195,7 @@ public class CurrentGameFragment extends Fragment {
             }
         });
 
-        /**
-        new Handler().post(new Runnable() {
-            @Override
-            public void run() {
-                // Code here will run in UI thread
-                if (currentQuestion != null) {
-                    refreshUi(currentQuestion);
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
 
-            }
-        });
-         */
 
         return binding.getRoot();
     }
@@ -307,7 +291,7 @@ public class CurrentGameFragment extends Fragment {
                                             if (!timerFlag) {
                                                 setCurrentQuestion(currentGame);
                                                 if (currentQuestion != null) {
-                                                    System.out.println(currentQuestion.getId());
+                                                    //System.out.println(currentQuestion.getId());
                                                 }
                                             } else {
                                                 this.cancel();
@@ -414,6 +398,7 @@ public class CurrentGameFragment extends Fragment {
                         currentQuestion = questions.get(finalI);
 
                     } else if (answersCount != null && answersCount >= totalPlayers.size() && finalI == questions.size()) {
+                        timerFlag = true;
                         currentQuestion = questions.get(questions.size()-1);
                         refreshUi(currentQuestion);
                         //Toast.makeText(getContext(), finalI + "final" + questions.size(), Toast.LENGTH_SHORT).show();
@@ -429,7 +414,7 @@ public class CurrentGameFragment extends Fragment {
                         ft.replace(R.id.nav_host_fragment, fragment);
                         ft.addToBackStack(null);
                         ft.commit();
-                        timerFlag = true;
+
                     }
 
                 }
@@ -506,6 +491,8 @@ public class CurrentGameFragment extends Fragment {
 
             DatabaseReference ref = FirebaseDatabase.getInstance(MainActivity.DATABASE_PATH)
                     .getReference("/games/" + currentGame.getPin() + "/scores/" + user.getUsername() + "/");
+
+
             ref.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -522,6 +509,7 @@ public class CurrentGameFragment extends Fragment {
 
                 }
             });
+
         }
 
         @Override
