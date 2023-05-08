@@ -27,11 +27,14 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.xwray.groupie.GroupAdapter;
 import com.xwray.groupie.GroupieViewHolder;
 import com.xwray.groupie.Item;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class MyGamesFragment extends Fragment {
 
@@ -146,9 +149,42 @@ public class MyGamesFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
                     if (!game.getStarted()) {
-                        game.setStarted(true);
-                        ref.setValue(game);
-                        refreshAdapter();
+                        Set<User> members = new HashSet<>();
+                        DatabaseReference membersRef = FirebaseDatabase.getInstance(MainActivity.DATABASE_PATH)
+                                        .getReference("/games/" + game.getPin() + "/players/");
+
+                        membersRef.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                if (snapshot.hasChildren()) {
+
+                                    for (DataSnapshot snap : snapshot.getChildren()) {
+                                        User u = (User) snap.getValue(User.class);
+                                        members.add(u);
+
+
+                                    }
+
+                                    game.setStarted(true);
+                                    ref.setValue(game);
+
+                                    for (User u : members) {
+                                        DatabaseReference finalRef = FirebaseDatabase.getInstance(MainActivity.DATABASE_PATH)
+                                                .getReference("/games/" + game.getPin() + "/players/" + u.getUsername() + "/");
+                                        finalRef.setValue(u);
+                                    }
+
+                                    refreshAdapter();
+                                }
+
+                                membersRef.removeEventListener(this);
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
                     }
                 }
             });
@@ -169,8 +205,7 @@ public class MyGamesFragment extends Fragment {
                 public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                     //добавляю список участников
                     User user = snapshot.getValue(User.class);
-                    //memberNames.add(user.getUsername());
-                    members.setText(members.getText().toString().concat(user.getUsername() + ", "));
+                    members.setText(members.getText().toString().concat(" " + user.getUsername() + ","));
 
                 }
 
@@ -194,10 +229,6 @@ public class MyGamesFragment extends Fragment {
 
                 }
             });
-
-            //for (String username : memberNames) {
-            //    members.setText(members.getText() + username);
-            //}
         }
 
         @Override

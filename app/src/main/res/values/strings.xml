@@ -42,4 +42,8 @@
     <string name="notexist">The quiz with such ID does not exist</string>
     <string name="checkfields">Check the fields to be filled in</string>
     <string name="cantaccess">Cant access the quiz</string>
+    <string name="zagruzka">Loading...</string>
+    <string name="addquestion">Add at least one question</string>
+    <string name="deletingin">Deleting the quiz in</string>
+    <string name="xseconds">seconds</string>
 </resources>

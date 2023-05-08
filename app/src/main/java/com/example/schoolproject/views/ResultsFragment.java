@@ -1,6 +1,7 @@
 package com.example.schoolproject.views;
 
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +29,8 @@ import com.xwray.groupie.GroupieViewHolder;
 import com.xwray.groupie.Item;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class ResultsFragment extends Fragment {
 
@@ -44,18 +47,33 @@ public class ResultsFragment extends Fragment {
         currentGame = getArguments().getParcelable("CURR_GAME");
         players = getArguments().getParcelableArrayList("CURR_MEMBERS");
 
-        Toast.makeText(getContext(), "" + players.size(), Toast.LENGTH_SHORT).show();
-
-        /**
-        DatabaseReference ref = FirebaseDatabase.getInstance(MainActivity.DATABASE_PATH)
-                .getReference("/games/" + currentGame.getPin() + "/");
-         */
+        //Toast.makeText(getContext(), "" + players.size(), Toast.LENGTH_SHORT).show();
 
         for (User u : players) {
             adapter.add(new UserScoreItem(u));
         }
 
         binding.resultsRecycler.setAdapter(adapter);
+
+        new CountDownTimer(15000, 1000) {
+
+            public void onTick(long millisUntilFinished) {
+                binding.deletingInfo.setText(getResources()
+                        .getString(R.string.deletingin) +
+                        " " + (millisUntilFinished / 1000) + " " +
+                        getResources().getString(R.string.xseconds));
+            }
+
+            public void onFinish() {
+                binding.deletingInfo.setText(getResources()
+                        .getString(R.string.deletingin) +
+                        " " + 0 + " " +
+                        getResources().getString(R.string.xseconds));
+                DatabaseReference ref = FirebaseDatabase.getInstance(MainActivity.DATABASE_PATH)
+                        .getReference("/games/" + currentGame.getPin() + "/");
+                ref.removeValue();
+            }
+        }.start();
 
         return binding.getRoot();
     }

@@ -46,14 +46,15 @@ public class CurrentGameFragment extends Fragment {
 
     //все что происходит в текущей игре
 
-    User currentUser;
-    Game currentGame;
-    GroupAdapter<GroupieViewHolder> adapter = new GroupAdapter<>();
-    ArrayList<User> totalPlayers = new ArrayList<>();
-    ArrayList<Question> questions = new ArrayList<>();
-    Question currentQuestion;
+    private User currentUser;
+    private Game currentGame;
+    private GroupAdapter<GroupieViewHolder> adapter = new GroupAdapter<>();
+    private ArrayList<User> totalPlayers = new ArrayList<>();
+    private ArrayList<Question> questions = new ArrayList<>();
+    private Question currentQuestion;
     final boolean[] flag = {false};
     boolean timerFlag = false;
+    int k = 0;
 
     private CurrentGameFragmentBinding binding;
 
@@ -62,26 +63,48 @@ public class CurrentGameFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = CurrentGameFragmentBinding.inflate(inflater, container, false);
 
-        //после установки пользователя задается игра в методе ниже и заполняется адаптер с очками пользователей
+        //после установки пользователя задается опрос в методе ниже и заполняется адаптер с очками пользователей
         setCurrentUser();
 
-        binding.answer1.setOnClickListener(new View.OnClickListener() {
+        binding.answer1Tw.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getContext(), "1", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getContext(), "1", Toast.LENGTH_SHORT).show();
 
-                //Этот код добавляет +1 к колву ответов на данный вопрос
+                //проверяет правильно ли ответил участник
                 DatabaseReference ref = FirebaseDatabase.getInstance(MainActivity.DATABASE_PATH)
-                        .getReference("/games/" + currentGame.getPin() + "/questions/ID" + currentQuestion.getId() + "/answersnum/");
+                        .getReference("/games/" + currentGame.getPin() + "/questions/ID" + currentQuestion.getId() + "/answers/" + currentUser.getUsername() + "/");
                 ref.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        Long k = (Long) snapshot.getValue();
-                        if (k == null) {
+                        Long userAnswer = (Long) snapshot.getValue();
+
+                        if (userAnswer == null) {
                             ref.setValue(1);
-                        } else {
-                            ref.setValue(k+1);
+
+                            DatabaseReference ref2 = FirebaseDatabase.getInstance(MainActivity.DATABASE_PATH)
+                                    .getReference("/games/" + currentGame.getPin() + "/scores/" + currentUser.getUsername() + "/");
+                            ref2.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    Long score = (Long) snapshot.getValue();
+                                    if (currentQuestion.getAnswerOne().containsValue(true)) {
+                                        if (score == null) {
+                                            ref2.setValue(127);
+                                        } else {
+                                            ref2.setValue(score + 149);
+                                        }
+                                    }
+                                    ref2.removeEventListener(this);
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
                         }
+
                         ref.removeEventListener(this);
                     }
 
@@ -91,99 +114,47 @@ public class CurrentGameFragment extends Fragment {
                     }
                 });
 
-                DatabaseReference ref2 = FirebaseDatabase.getInstance(MainActivity.DATABASE_PATH)
-                        .getReference("/games/" + currentGame.getPin() + "/scores/" + currentUser.getUsername() + "/");
-                ref2.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        Long score = (Long) snapshot.getValue();
-                        if (currentQuestion.getAnswerOne().containsValue(true)) {
-                            if (score == null) {
-                                ref2.setValue(127);
-                            } else {
-                                ref2.setValue(score + 149);
-                            }
-                            ref2.removeEventListener(this);
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-
-                currentQuestion.getAnswerOne();
             }
         });
 
-        binding.answer2.setOnClickListener(new View.OnClickListener() {
+        binding.answer2Tw.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View view) {
-                Toast.makeText(getContext(), "2", Toast.LENGTH_SHORT).show();
+                //проверяет правильно ли ответил участник
                 DatabaseReference ref = FirebaseDatabase.getInstance(MainActivity.DATABASE_PATH)
-                        .getReference("/games/" + currentGame.getPin() + "/questions/ID" + currentQuestion.getId() + "/answersnum/");
+                        .getReference("/games/" + currentGame.getPin() + "/questions/ID" + currentQuestion.getId() + "/answers/" + currentUser.getUsername() + "/");
                 ref.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        Long k = (Long) snapshot.getValue();
-                        if (k == null) {
+                        Long userAnswer = (Long) snapshot.getValue();
+
+                        if (userAnswer == null) {
                             ref.setValue(1);
-                        } else {
-                            ref.setValue(k+1);
+
+                            DatabaseReference ref2 = FirebaseDatabase.getInstance(MainActivity.DATABASE_PATH)
+                                    .getReference("/games/" + currentGame.getPin() + "/scores/" + currentUser.getUsername() + "/");
+                            ref2.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    Long score = (Long) snapshot.getValue();
+                                    if (currentQuestion.getAnswerTwo().containsValue(true)) {
+                                        if (score == null) {
+                                            ref2.setValue(127);
+                                        } else {
+                                            ref2.setValue(score + 149);
+                                        }
+                                    }
+                                    ref2.removeEventListener(this);
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
                         }
-                        ref.removeEventListener(this);
-                    }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-            }
-        });
-
-        binding.answer3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(getContext(), "3", Toast.LENGTH_SHORT).show();
-                DatabaseReference ref = FirebaseDatabase.getInstance(MainActivity.DATABASE_PATH)
-                        .getReference("/games/" + currentGame.getPin() + "/questions/ID" + currentQuestion.getId() + "/answersnum/");
-                ref.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        Long k = (Long) snapshot.getValue();
-                        if (k == null) {
-                            ref.setValue(1);
-                        } else {
-                            ref.setValue(k+1);
-                        }
-                        ref.removeEventListener(this);
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-            }
-        });
-
-        binding.answer4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(getContext(), "4", Toast.LENGTH_SHORT).show();
-                DatabaseReference ref = FirebaseDatabase.getInstance(MainActivity.DATABASE_PATH)
-                        .getReference("/games/" + currentGame.getPin() + "/questions/ID" + currentQuestion.getId() + "/answersnum/");
-                ref.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        Long k = (Long) snapshot.getValue();
-                        if (k == null) {
-                            ref.setValue(1);
-                        } else {
-                            ref.setValue(k+1);
-                        }
                         ref.removeEventListener(this);
                     }
 
@@ -195,7 +166,126 @@ public class CurrentGameFragment extends Fragment {
             }
         });
 
+        binding.answer3Tw.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //проверяет правильно ли ответил участник
+                DatabaseReference ref = FirebaseDatabase.getInstance(MainActivity.DATABASE_PATH)
+                        .getReference("/games/" + currentGame.getPin() + "/questions/ID" + currentQuestion.getId() + "/answers/" + currentUser.getUsername() + "/");
+                ref.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        Long userAnswer = (Long) snapshot.getValue();
 
+                        if (userAnswer == null) {
+                            ref.setValue(1);
+
+                            DatabaseReference ref2 = FirebaseDatabase.getInstance(MainActivity.DATABASE_PATH)
+                                    .getReference("/games/" + currentGame.getPin() + "/scores/" + currentUser.getUsername() + "/");
+                            ref2.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    Long score = (Long) snapshot.getValue();
+                                    if (currentQuestion.getAnswerThree().containsValue(true)) {
+                                        if (score == null) {
+                                            ref2.setValue(127);
+                                        } else {
+                                            ref2.setValue(score + 149);
+                                        }
+                                    }
+                                    ref2.removeEventListener(this);
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
+                        }
+
+                        ref.removeEventListener(this);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+            }
+        });
+
+        binding.answer4Tw.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //проверяет правильно ли ответил участник
+                DatabaseReference ref = FirebaseDatabase.getInstance(MainActivity.DATABASE_PATH)
+                        .getReference("/games/" + currentGame.getPin() + "/questions/ID" + currentQuestion.getId() + "/answers/" + currentUser.getUsername() + "/");
+                ref.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        Long userAnswer = (Long) snapshot.getValue();
+
+                        if (userAnswer == null) {
+                            ref.setValue(1);
+
+                            DatabaseReference ref2 = FirebaseDatabase.getInstance(MainActivity.DATABASE_PATH)
+                                    .getReference("/games/" + currentGame.getPin() + "/scores/" + currentUser.getUsername() + "/");
+                            ref2.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    Long score = (Long) snapshot.getValue();
+                                    if (currentQuestion.getAnswerFour().containsValue(true)) {
+                                        if (score == null) {
+                                            ref2.setValue(127);
+                                        } else {
+                                            ref2.setValue(score + 149);
+                                        }
+                                    }
+                                    ref2.removeEventListener(this);
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
+                        }
+
+                        ref.removeEventListener(this);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+            }
+        });
+
+        //поток нужен чтобы обновить ui после 2 секунд после захода на фрагмент
+        new Thread(new Runnable() {
+            boolean fl = false;
+            @Override
+            public void run() {
+                while (!fl) {
+
+                    k++;
+                    System.out.println(k);
+
+                    if (k == 2) {
+                        setCurrentQuestion(currentGame);
+                    } else if (k > 2) {
+                        fl = true;
+                    }
+
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+        }).start();
 
         return binding.getRoot();
     }
@@ -259,21 +349,26 @@ public class CurrentGameFragment extends Fragment {
                                         @Override
                                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                                             HashMap<String, Boolean> isStarted = (HashMap<String, Boolean>) snapshot.getValue();
-                                            if (!isStarted.containsValue(Boolean.TRUE)) {
-                                                binding.currentPin.setVisibility(View.INVISIBLE);
-                                                binding.currentQuestionNum.setVisibility(View.INVISIBLE);
-                                                binding.currentQuestionText.setVisibility(View.INVISIBLE);
-                                                binding.scrollView2.setVisibility(View.INVISIBLE);
+                                            if (isStarted != null) {
+                                                if (!isStarted.containsValue(Boolean.TRUE)) {
+                                                    binding.upperLayout.setVisibility(View.INVISIBLE);
+                                                    binding.scrollView2.setVisibility(View.INVISIBLE);
 
-                                                binding.innerlayout.setVisibility(View.VISIBLE);
+                                                    binding.innerlayout.setVisibility(View.VISIBLE);
+                                                } else {
+                                                    binding.upperLayout.setVisibility(View.VISIBLE);
+                                                    binding.scrollView2.setVisibility(View.VISIBLE);
+
+                                                    binding.innerlayout.setVisibility(View.INVISIBLE);
+                                                }
                                             } else {
-                                                binding.currentPin.setVisibility(View.VISIBLE);
-                                                binding.currentQuestionNum.setVisibility(View.VISIBLE);
-                                                binding.currentQuestionText.setVisibility(View.VISIBLE);
-                                                binding.scrollView2.setVisibility(View.VISIBLE);
-
-                                                binding.innerlayout.setVisibility(View.INVISIBLE);
+                                                FragmentManager fm = getActivity().getSupportFragmentManager();
+                                                FragmentTransaction ft = fm.beginTransaction();
+                                                ft.replace(R.id.nav_host_fragment, new EnterGameFragment());
+                                                ft.addToBackStack(null);
+                                                ft.commit();
                                             }
+
                                         }
 
                                         @Override
@@ -285,19 +380,6 @@ public class CurrentGameFragment extends Fragment {
                                     fillAdapter();
                                     binding.currentPin.setText("ID: " + currentGame.getPin());
                                     getCurrentGameQuestions(currentGame);
-
-                                    new Timer().schedule(new TimerTask() {
-                                        public void run() {
-                                            if (!timerFlag) {
-                                                setCurrentQuestion(currentGame);
-                                                if (currentQuestion != null) {
-                                                    //System.out.println(currentQuestion.getId());
-                                                }
-                                            } else {
-                                                this.cancel();
-                                            }
-                                        }
-                                    }, 0, 100);
                                 }
                             }
                         }
@@ -362,15 +444,12 @@ public class CurrentGameFragment extends Fragment {
     }
 
     public void setCurrentQuestion(Game game) {
+
+        /**
         flag[0] = false;
 
         for (int i = 1; i < questions.size()+1; i++) {
-            /**
-             * если колво ответов на вопрос i в цикле меньше колва игроков,
-             * то этот вопрос устанавливается как вопрос в данный момент (i-1) у всех игроков
-             * Если колво ответов на вопрос совпадает с колвом игроков то вопросом в данный момент
-             * будет вопрос i (отнимаю единицу потому что цикл начитается с 1)
-             */
+
             DatabaseReference ref = FirebaseDatabase.getInstance(MainActivity.DATABASE_PATH)
                     .getReference("/games/" + game.getPin() + "/questions/ID" + i + "/answersnum/");
             int finalI = i;
@@ -384,6 +463,8 @@ public class CurrentGameFragment extends Fragment {
                         //Toast.makeText(getContext(), "ostalsya v etom je", Toast.LENGTH_SHORT).show();
                         if (currentQuestion == null) {
                             currentQuestion = questions.get(finalI-1);
+                            refreshUi(currentQuestion);
+                        } else {
                             refreshUi(currentQuestion);
                         }
 
@@ -416,6 +497,8 @@ public class CurrentGameFragment extends Fragment {
                         ft.addToBackStack(null);
                         ft.commit();
 
+                    } else {
+                        refreshUi(currentQuestion);
                     }
 
                 }
@@ -430,10 +513,83 @@ public class CurrentGameFragment extends Fragment {
                 break;
             }
         }
+         */
+
+
+        /**
+         * если колво ответов на вопрос i в цикле меньше колва пользователей,
+         * то этот вопрос устанавливается как вопрос в данный момент (i-1) у всех пользователей
+         * Если колво ответов на вопрос совпадает с колвом пользователей то вопросом в данный момент
+         * будет вопрос i (отнимаю единицу потому что цикл начитается с 1)
+         */
+        for (int i = 1; i < questions.size()+1; i++) {
+            DatabaseReference ref = FirebaseDatabase.getInstance(MainActivity.DATABASE_PATH)
+                    .getReference("/games/" + game.getPin() + "/questions/ID" + i + "/answers/");
+            int finalI = i;
+            ref.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    long answersCount = 0;
+                    for (DataSnapshot snap : snapshot.getChildren()) {
+                        Long k = (Long) snap.getValue();
+                        answersCount += k;
+                    }
+
+                    if ((answersCount == 0 || answersCount < totalPlayers.size()) && (finalI < questions.size())) {
+
+                        //Toast.makeText(getContext(), "ostalsya v etom je", Toast.LENGTH_SHORT).show();
+                        if (currentQuestion == null) {
+                            currentQuestion = questions.get(finalI-1);
+                            refreshUi(currentQuestion);
+                        } else {
+                            refreshUi(currentQuestion);
+                        }
+
+                        //flag[0] = true;
+                        //ref.removeEventListener(this);
+                    } else if (answersCount != 0 && answersCount >= totalPlayers.size() && finalI < questions.size()) {
+                        if ((currentQuestion != null) && (!currentQuestion.equals(questions.get(finalI)))) {
+                            //Toast.makeText(getContext(), finalI + "perehod na sleduyushii" + questions.size(), Toast.LENGTH_SHORT).show();
+                            currentQuestion = questions.get(finalI);
+                            refreshUi(currentQuestion);
+                        }
+
+                        currentQuestion = questions.get(finalI);
+
+                    } else if (answersCount != 0 && answersCount >= totalPlayers.size() && finalI == questions.size()) {
+                        timerFlag = true;
+                        currentQuestion = questions.get(questions.size()-1);
+                        refreshUi(currentQuestion);
+                        //Toast.makeText(getContext(), finalI + "final" + questions.size(), Toast.LENGTH_SHORT).show();
+                        FragmentManager fm = getActivity().getSupportFragmentManager();
+                        FragmentTransaction ft = fm.beginTransaction();
+                        ResultsFragment fragment = new ResultsFragment();
+
+                        Bundle data = new Bundle();
+                        data.putParcelable("CURR_GAME", currentGame);
+                        data.putParcelableArrayList("CURR_MEMBERS", totalPlayers);
+                        fragment.setArguments(data);
+
+                        ft.replace(R.id.nav_host_fragment, fragment);
+                        ft.addToBackStack(null);
+                        ft.commit();
+
+                    } else {
+                        refreshUi(currentQuestion);
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+        }
     }
 
     public void refreshUi(Question question) {
         binding.currentQuestionText.setText(question.getQuestionText());
+        binding.quizTitle.setText(currentGame.getTitle());
         Picasso.get()
                 .load(question.getPhotoUrl())
                 .into(binding.imageView);
@@ -443,11 +599,6 @@ public class CurrentGameFragment extends Fragment {
         binding.answer4Tw.setText(question.getAnswerFour().keySet().toString());
 
         binding.currentQuestionNum.setText(question.getId() + " " + getResources().getString(R.string.of) + " " + questions.size());
-
-        binding.answer1.setEnabled(true);
-        binding.answer2.setEnabled(true);
-        binding.answer3.setEnabled(true);
-        binding.answer4.setEnabled(true);
     }
 
     //обавляет вопросы в массив
@@ -518,6 +669,4 @@ public class CurrentGameFragment extends Fragment {
             return R.layout.user_score_item;
         }
     }
-
-
 }

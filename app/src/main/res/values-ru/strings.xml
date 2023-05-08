@@ -42,4 +42,8 @@
     <string name="notexist">Опроса с таким ID не существует</string>
     <string name="checkfields">Проверьте заполняемые поля</string>
     <string name="cantaccess">Не удалось подключиться с опросу</string>
+    <string name="zagruzka">Загрузка...</string>
+    <string name="addquestion">Добавьте хотя-бы один вопрос</string>
+    <string name="deletingin">Удаление опроса через</string>
+    <string name="xseconds">секунд</string>
 </resources>

@@ -37,6 +37,6 @@
         android:layout_marginEnd="10dp"
         android:layout_marginBottom="10dp"
         android:background="@drawable/circular_shape"
-        android:src="@android:drawable/ic_delete"
+        android:src="@drawable/baseline_cancel_36"
         android:backgroundTint="@color/salatowy"/>
 </RelativeLayout>

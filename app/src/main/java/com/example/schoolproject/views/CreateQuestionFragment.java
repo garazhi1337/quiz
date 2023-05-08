@@ -50,6 +50,7 @@ public class CreateQuestionFragment extends Fragment {
         Bundle data = this.getArguments();
         questions = data.getParcelableArrayList("CREATE_G");
 
+        /**
         String[] arraySpinner = new String[] {
                 "10", "15", "30", "45", "60", "90", "120"
         };
@@ -57,6 +58,7 @@ public class CreateQuestionFragment extends Fragment {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, arraySpinner);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         s.setAdapter(adapter);
+         */
 
         if (questions != null && !questions.isEmpty()) {
 
@@ -109,9 +111,7 @@ public class CreateQuestionFragment extends Fragment {
                     map4.put(binding.edittext4.getText().toString() + " ", binding.checkbox4.isChecked());
                     question.setAnswerFour(map4);
 
-
-
-                    question.setSeconds(Integer.parseInt(binding.spinner.getSelectedItem().toString()));
+                    question.setSeconds(10);
 
                     questions.add(question);
 
@@ -198,7 +198,7 @@ public class CreateQuestionFragment extends Fragment {
                                         map4.put(binding.edittext4.getText().toString() + " ", binding.checkbox4.isChecked());
                                         question.setAnswerFour(map4);
 
-                                        question.setSeconds(Integer.parseInt(binding.spinner.getSelectedItem().toString()));
+                                        question.setSeconds(10);
 
                                         questions.add(question);
 
