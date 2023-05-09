@@ -437,9 +437,40 @@ public class CurrentGameFragment extends Fragment {
 
     public void refreshAdapter() {
         adapter.clear();
+
         for (User u : totalPlayers) {
             adapter.add(new UserScoreItem(u));
         }
+
+        sortScores(adapter);
+        //binding.currentGameRecyclerView.setAdapter(adapter);
+    }
+
+    private void sortScores(GroupAdapter<GroupieViewHolder> adapter) {
+        ArrayList<UserScoreItem> userScoreItems = new ArrayList<>();
+        for (int i = 0; i < adapter.getItemCount(); i++) {
+            userScoreItems.add((UserScoreItem) adapter.getItem(i));
+            System.out.println(((UserScoreItem) adapter.getItem(i)).score.toString());
+        }
+
+        boolean isSorted = false;
+
+        while (!isSorted) {
+            isSorted = true;
+            for (int i = 0; i < (userScoreItems.size()-1); i++) {
+                if (userScoreItems.get(i).score < userScoreItems.get(i+1).score) {
+                    UserScoreItem temp = userScoreItems.get(i);
+                    userScoreItems.set(i, userScoreItems.get(i+1));
+                    userScoreItems.set(i+1, temp);
+                    isSorted = false;
+                }
+            }
+        }
+
+        for (UserScoreItem userScoreItem : userScoreItems) {
+            adapter.add(userScoreItem);
+        }
+
         binding.currentGameRecyclerView.setAdapter(adapter);
     }
 
@@ -453,6 +484,7 @@ public class CurrentGameFragment extends Fragment {
         for (int i = 1; i < questions.size()+1; i++) {
             DatabaseReference ref = FirebaseDatabase.getInstance(MainActivity.DATABASE_PATH)
                     .getReference("/games/" + game.getPin() + "/questions/ID" + i + "/answers/");
+            binding.answers.setText(getResources().getString(R.string.answers) + " " + 0);
             int finalI = i;
             ref.addValueEventListener(new ValueEventListener() {
                 @Override
@@ -557,13 +589,12 @@ public class CurrentGameFragment extends Fragment {
         });
     }
 
-    private void sortScores() {
 
-    }
 
     class UserScoreItem extends Item<GroupieViewHolder> {
 
         private User user;
+        public Long score;
 
         public UserScoreItem(User user) {
             this.user = user;
@@ -593,7 +624,7 @@ public class CurrentGameFragment extends Fragment {
             ref.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    Long score = (Long) snapshot.getValue();
+                    score = (Long) snapshot.getValue();
                     if (score != null) {
                         userScore.setText(Long.toString(score));
                     } else {

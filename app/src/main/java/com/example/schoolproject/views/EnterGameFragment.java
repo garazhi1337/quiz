@@ -126,18 +126,23 @@ public class EnterGameFragment extends Fragment {
                             for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                                 User user = dataSnapshot.getValue(User.class);
                                 if (user != null) {
-                                    if (user.getUsername().equals(currentUser.getUsername())) {
-                                        try {
-                                            FragmentManager fm = getActivity().getSupportFragmentManager();
-                                            FragmentTransaction ft = fm.beginTransaction();
-                                            ft.replace(R.id.nav_host_fragment, new CurrentGameFragment());
-                                            ft.addToBackStack(null);
-                                            ft.commit();
-                                        } catch (Exception e) {
-                                            e.printStackTrace();
-                                        }
+                                    try {
+                                        if (user.getUsername().equals(currentUser.getUsername())) {
+                                            try {
+                                                FragmentManager fm = getActivity().getSupportFragmentManager();
+                                                FragmentTransaction ft = fm.beginTransaction();
+                                                ft.replace(R.id.nav_host_fragment, new CurrentGameFragment());
+                                                ft.addToBackStack(null);
+                                                ft.commit();
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
 
+                                        }
+                                    } catch (Exception e) {
+                                        Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
                                     }
+
                                 }
                             }
                         }
