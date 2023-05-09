@@ -46,7 +46,6 @@ public class EnterGameFragment extends Fragment {
 
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
 
-
             setCurrentUser();
 
             binding.enterGameBtn.setOnClickListener(new View.OnClickListener() {
@@ -58,7 +57,7 @@ public class EnterGameFragment extends Fragment {
                         @Override
                         public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                             Game game = snapshot.getValue(Game.class);
-                            if (game.getPin().equals(binding.enterPin.getText().toString().trim())
+                            if (game != null && game.getPin().equals(binding.enterPin.getText().toString().trim())
                                     && game.getStarted() == false && !currentUser.getUsername().equals(game.getAuthor())) {
                                 DatabaseReference ref2 = FirebaseDatabase.getInstance(MainActivity.DATABASE_PATH)
                                         .getReference("/games/" + game.getPin() + "/players/" + MainActivity.currentUser.getUsername() + "/");

@@ -231,7 +231,8 @@
                     android:background="@drawable/volumablebtn"
                     android:text="@string/cancel"
                     android:textColor="@color/white"
-                    android:textStyle="bold"></androidx.appcompat.widget.AppCompatButton>
+                    android:textStyle="bold"
+                    android:textAllCaps="false"></androidx.appcompat.widget.AppCompatButton>
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/save_question_btn"
@@ -241,7 +242,8 @@
                     android:background="@drawable/volumablebtn"
                     android:text="@string/save"
                     android:textColor="@color/white"
-                    android:textStyle="bold"></androidx.appcompat.widget.AppCompatButton>
+                    android:textStyle="bold"
+                    android:textAllCaps="false"></androidx.appcompat.widget.AppCompatButton>
             </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

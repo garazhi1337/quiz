@@ -41,7 +41,8 @@
             android:id="@+id/login_btn"
             android:layout_width="match_parent"
             android:layout_height="45dp"
-            android:text="@string/login"></androidx.appcompat.widget.AppCompatButton>
+            android:text="@string/login"
+            android:textAllCaps="false"></androidx.appcompat.widget.AppCompatButton>
 
         <TextView
             android:id="@+id/regestration"

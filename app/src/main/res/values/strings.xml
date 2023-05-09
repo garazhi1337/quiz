@@ -46,4 +46,6 @@
     <string name="addquestion">Add at least one question</string>
     <string name="deletingin">Deleting the quiz in</string>
     <string name="xseconds">seconds</string>
+    <string name="answers">Answers: </string>
+    <string name="emptystr">Empty </string>
 </resources>

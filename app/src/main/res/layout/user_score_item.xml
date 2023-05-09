@@ -2,12 +2,14 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginVertical="5dp">
+    android:layout_marginVertical="2dp"
+    android:id="@+id/userScoreLayout">
 
     <ImageView
         android:id="@+id/score_image_view"
         android:layout_width="30dp"
-        android:layout_height="30dp"></ImageView>
+        android:layout_height="30dp"
+        android:layout_marginLeft="10dp"></ImageView>
 
     <TextView
         android:id="@+id/score_username"

@@ -444,78 +444,6 @@ public class CurrentGameFragment extends Fragment {
     }
 
     public void setCurrentQuestion(Game game) {
-
-        /**
-        flag[0] = false;
-
-        for (int i = 1; i < questions.size()+1; i++) {
-
-            DatabaseReference ref = FirebaseDatabase.getInstance(MainActivity.DATABASE_PATH)
-                    .getReference("/games/" + game.getPin() + "/questions/ID" + i + "/answersnum/");
-            int finalI = i;
-            ref.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    Long answersCount = (Long) snapshot.getValue();
-
-                    if ((answersCount == null || answersCount < totalPlayers.size()) && (finalI < questions.size())) {
-
-                        //Toast.makeText(getContext(), "ostalsya v etom je", Toast.LENGTH_SHORT).show();
-                        if (currentQuestion == null) {
-                            currentQuestion = questions.get(finalI-1);
-                            refreshUi(currentQuestion);
-                        } else {
-                            refreshUi(currentQuestion);
-                        }
-
-                        //flag[0] = true;
-                        //ref.removeEventListener(this);
-                    } else if (answersCount != null && answersCount >= totalPlayers.size() && finalI < questions.size()) {
-                        if ((currentQuestion != null) && (!currentQuestion.equals(questions.get(finalI)))) {
-                            //Toast.makeText(getContext(), finalI + "perehod na sleduyushii" + questions.size(), Toast.LENGTH_SHORT).show();
-                            currentQuestion = questions.get(finalI);
-                            refreshUi(currentQuestion);
-                        }
-
-                        currentQuestion = questions.get(finalI);
-
-                    } else if (answersCount != null && answersCount >= totalPlayers.size() && finalI == questions.size()) {
-                        timerFlag = true;
-                        currentQuestion = questions.get(questions.size()-1);
-                        refreshUi(currentQuestion);
-                        //Toast.makeText(getContext(), finalI + "final" + questions.size(), Toast.LENGTH_SHORT).show();
-                        FragmentManager fm = getActivity().getSupportFragmentManager();
-                        FragmentTransaction ft = fm.beginTransaction();
-                        ResultsFragment fragment = new ResultsFragment();
-
-                        Bundle data = new Bundle();
-                        data.putParcelable("CURR_GAME", currentGame);
-                        data.putParcelableArrayList("CURR_MEMBERS", totalPlayers);
-                        fragment.setArguments(data);
-
-                        ft.replace(R.id.nav_host_fragment, fragment);
-                        ft.addToBackStack(null);
-                        ft.commit();
-
-                    } else {
-                        refreshUi(currentQuestion);
-                    }
-
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-
-                }
-            });
-
-            if (flag[0] == true) {
-                break;
-            }
-        }
-         */
-
-
         /**
          * если колво ответов на вопрос i в цикле меньше колва пользователей,
          * то этот вопрос устанавливается как вопрос в данный момент (i-1) у всех пользователей
@@ -533,7 +461,14 @@ public class CurrentGameFragment extends Fragment {
                     for (DataSnapshot snap : snapshot.getChildren()) {
                         Long k = (Long) snap.getValue();
                         answersCount += k;
+                        if (answersCount == questions.size()) {
+                            binding.answers.setText(getResources().getString(R.string.answers) + " " + 0);
+                        } else {
+                            binding.answers.setText(getResources().getString(R.string.answers) + " " + answersCount);
+                        }
+
                     }
+
 
                     if ((answersCount == 0 || answersCount < totalPlayers.size()) && (finalI < questions.size())) {
 
@@ -593,10 +528,10 @@ public class CurrentGameFragment extends Fragment {
         Picasso.get()
                 .load(question.getPhotoUrl())
                 .into(binding.imageView);
-        binding.answer1Tw.setText(question.getAnswerOne().keySet().toString());
-        binding.answer2Tw.setText(question.getAnswerTwo().keySet().toString());
-        binding.answer3Tw.setText(question.getAnswerThree().keySet().toString());
-        binding.answer4Tw.setText(question.getAnswerFour().keySet().toString());
+        binding.answer1Tw.setText(question.getAnswerOne().keySet().toArray()[0].toString());
+        binding.answer2Tw.setText(question.getAnswerTwo().keySet().toArray()[0].toString());
+        binding.answer3Tw.setText(question.getAnswerThree().keySet().toArray()[0].toString());
+        binding.answer4Tw.setText(question.getAnswerFour().keySet().toArray()[0].toString());
 
         binding.currentQuestionNum.setText(question.getId() + " " + getResources().getString(R.string.of) + " " + questions.size());
     }
@@ -622,6 +557,10 @@ public class CurrentGameFragment extends Fragment {
         });
     }
 
+    private void sortScores() {
+
+    }
+
     class UserScoreItem extends Item<GroupieViewHolder> {
 
         private User user;
@@ -632,6 +571,12 @@ public class CurrentGameFragment extends Fragment {
 
         @Override
         public void bind(@NonNull GroupieViewHolder viewHolder, int position) {
+
+            if (user.getUsername().equals(currentUser.getUsername())) {
+                viewHolder.itemView.findViewById(R.id.userScoreLayout)
+                        .setBackground(getResources().getDrawable(R.drawable.shape6));
+            }
+
             ImageView imageView = (ImageView) viewHolder.itemView.findViewById(R.id.score_image_view);
             TextView username = (TextView) viewHolder.itemView.findViewById(R.id.score_username);
             TextView userScore = (TextView) viewHolder.itemView.findViewById(R.id.score_score);

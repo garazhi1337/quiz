@@ -188,7 +188,7 @@ public class RegistrationFragment extends Fragment {
         user.setPassword(binding.password.getText().toString());
         user.setEmail(binding.email.getText().toString());
         user.setUid(uid);
-        user.setPfpLink("link");
+        user.setPfpLink("https://firebasestorage.googleapis.com/v0/b/schoolproject-7f38f.appspot.com/o/images%2FDefault_pfp.jpg?alt=media&token=6d84e505-807e-4307-a0e1-5685101c8f40");
 
         DatabaseReference database = FirebaseDatabase.getInstance(MainActivity.DATABASE_PATH)
                 .getReference("/users/" + uid);

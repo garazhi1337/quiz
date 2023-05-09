@@ -102,6 +102,11 @@ public class MyGamesFragment extends Fragment {
         for (Game g : games) {
             adapter.add(new MyGameItem(g));
         }
+        if (games.size() == 0) {
+            binding.emptyLayout.setVisibility(View.VISIBLE);
+        } else {
+            binding.emptyLayout.setVisibility(View.INVISIBLE);
+        }
         binding.recyclerView.setAdapter(adapter);
     }
 
@@ -109,7 +114,6 @@ public class MyGamesFragment extends Fragment {
     class MyGameItem extends Item<GroupieViewHolder> {
 
         private Game game;
-        private ArrayList<String> memberNames = new ArrayList<>();
 
         public MyGameItem(Game game) {
             this.game = game;

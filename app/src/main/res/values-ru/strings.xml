@@ -46,4 +46,6 @@
     <string name="addquestion">Добавьте хотя-бы один вопрос</string>
     <string name="deletingin">Удаление опроса через</string>
     <string name="xseconds">секунд</string>
+    <string name="answers">Ответов: </string>
+    <string name="emptystr">Пусто </string>
 </resources>

@@ -63,6 +63,7 @@
                     android:layout_height="50dp"
                     android:text="@string/savegame"
                     android:layout_marginRight="10dp"
+                    android:textAllCaps="false"
                 ></androidx.appcompat.widget.AppCompatButton>
 
                 <androidx.appcompat.widget.AppCompatButton
@@ -72,7 +73,8 @@
                     android:layout_width="170dp"
                     android:layout_height="50dp"
                     android:text="@string/addquestiom"
-                    android:background="@drawable/volumablebtn"></androidx.appcompat.widget.AppCompatButton>
+                    android:background="@drawable/volumablebtn"
+                    android:textAllCaps="false"></androidx.appcompat.widget.AppCompatButton>
             </LinearLayout>
         </RelativeLayout>
 

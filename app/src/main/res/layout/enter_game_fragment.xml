@@ -36,7 +36,8 @@
             android:layout_below="@+id/enter_pin"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:text="@string/enter"></androidx.appcompat.widget.AppCompatButton>
+            android:text="@string/enter"
+            android:textAllCaps="false"></androidx.appcompat.widget.AppCompatButton>
     </RelativeLayout>
 
     <ProgressBar

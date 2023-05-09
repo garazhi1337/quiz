@@ -18,6 +18,8 @@ import com.example.schoolproject.R;
 import com.example.schoolproject.databinding.ResultsFragmentBinding;
 import com.example.schoolproject.models.Game;
 import com.example.schoolproject.models.User;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -38,22 +40,18 @@ public class ResultsFragment extends Fragment {
     private Game currentGame;
     private ArrayList<User> players;
     private GroupAdapter<GroupieViewHolder> adapter = new GroupAdapter<>();
+    private User currentUser;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = ResultsFragmentBinding.inflate(inflater, container, false);
 
+
+
         currentGame = getArguments().getParcelable("CURR_GAME");
         players = getArguments().getParcelableArrayList("CURR_MEMBERS");
-
-        //Toast.makeText(getContext(), "" + players.size(), Toast.LENGTH_SHORT).show();
-
-        for (User u : players) {
-            adapter.add(new UserScoreItem(u));
-        }
-
-        binding.resultsRecycler.setAdapter(adapter);
+        setCurrentUser();
 
         new CountDownTimer(15000, 1000) {
 
@@ -78,9 +76,59 @@ public class ResultsFragment extends Fragment {
         return binding.getRoot();
     }
 
+    public void setCurrentUser() {
+        DatabaseReference ref = FirebaseDatabase.getInstance(MainActivity.DATABASE_PATH).getReference("/users");
+        ref.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                User user = snapshot.getValue(User.class);
+
+                if (user.getUid().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+                    currentUser = user;
+                    for (User u : players) {
+                        adapter.add(new UserScoreItem(u));
+                    }
+                    binding.resultsRecycler.setAdapter(adapter);
+                }
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    private void sortScores() {
+
+    }
+
     class UserScoreItem extends Item<GroupieViewHolder> {
 
         private User user;
+
+        public User getUser() {
+            return user;
+        }
+
+        public void setUser(User user) {
+            this.user = user;
+        }
 
         public UserScoreItem(User user) {
             this.user = user;
@@ -88,6 +136,12 @@ public class ResultsFragment extends Fragment {
 
         @Override
         public void bind(@NonNull GroupieViewHolder viewHolder, int position) {
+
+            if (user.getUsername().equals(currentUser.getUsername())) {
+                viewHolder.itemView.findViewById(R.id.userScoreLayout).setBackground(getResources()
+                        .getDrawable(R.drawable.shape6));
+            }
+
             ImageView imageView = (ImageView) viewHolder.itemView.findViewById(R.id.score_image_view);
             TextView username = (TextView) viewHolder.itemView.findViewById(R.id.score_username);
             TextView userScore = (TextView) viewHolder.itemView.findViewById(R.id.score_score);
