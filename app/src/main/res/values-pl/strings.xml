@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">SchoolProject</string>
+    <string name="app_name">Quiz Creator</string>
     <string name="enter_game">Zaloguj się do ankiety</string>
     <string name="registration">Rejestracja</string>
     <string name="username">Nazwa użytkownika</string>

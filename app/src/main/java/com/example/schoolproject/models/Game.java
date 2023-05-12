@@ -18,6 +18,26 @@ public class Game implements Parcelable {
     private Boolean isStarted;
     private String author;
 
+    protected Game(Parcel in) {
+        pin = in.readString();
+        title = in.readString();
+        byte tmpIsStarted = in.readByte();
+        isStarted = tmpIsStarted == 0 ? null : tmpIsStarted == 1;
+        author = in.readString();
+    }
+
+    public static final Creator<Game> CREATOR = new Creator<Game>() {
+        @Override
+        public Game createFromParcel(Parcel in) {
+            return new Game(in);
+        }
+
+        @Override
+        public Game[] newArray(int size) {
+            return new Game[size];
+        }
+    };
+
     public HashMap<String, Question> getQuestions() {
         return questions;
     }
@@ -77,6 +97,9 @@ public class Game implements Parcelable {
 
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
-
+        dest.writeString(pin);
+        dest.writeString(title);
+        dest.writeByte((byte) (isStarted == null ? 0 : isStarted ? 1 : 2));
+        dest.writeString(author);
     }
 }

@@ -122,27 +122,33 @@ public class CreateGameFragment extends Fragment {
         game.setAuthor(MainActivity.currentUser.getUsername());
 
         DatabaseReference ref = FirebaseDatabase.getInstance(MainActivity.DATABASE_PATH).getReference("games/" + game.getPin() + "/");
-        ref.setValue(game)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        Toast.makeText(getContext(), "Success!", Toast.LENGTH_SHORT).show();
-                        binding.progressCircular.setVisibility(View.INVISIBLE);
+        try {
+            ref.setValue(game)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void unused) {
+                            Toast.makeText(getContext(), "Success!", Toast.LENGTH_SHORT).show();
+                            binding.progressCircular.setVisibility(View.INVISIBLE);
 
-                        FragmentManager fm = getActivity().getSupportFragmentManager();
-                        FragmentTransaction ft = fm.beginTransaction();
-                        ft.replace(R.id.nav_host_fragment, new EnterGameFragment());
-                        ft.addToBackStack(null);
-                        ft.commit();
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
-                        binding.progressCircular.setVisibility(View.INVISIBLE);
-                    }
-                });
+                            FragmentManager fm = getActivity().getSupportFragmentManager();
+                            FragmentTransaction ft = fm.beginTransaction();
+                            ft.replace(R.id.nav_host_fragment, new EnterGameFragment());
+                            ft.addToBackStack(null);
+                            ft.commit();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                            binding.progressCircular.setVisibility(View.INVISIBLE);
+                        }
+                    });
+        } catch (Exception e) {
+            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+            binding.progressCircular.setVisibility(View.INVISIBLE);
+        }
+
     }
 
     public String getRandomNumberString() {

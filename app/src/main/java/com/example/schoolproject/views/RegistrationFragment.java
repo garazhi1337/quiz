@@ -36,7 +36,7 @@ public class RegistrationFragment extends Fragment {
     private RegestrationFragmentBinding binding;
     private Uri photoUri;
     private String pfpUrl;
-    String uid;
+    private String uid;
 
     @Nullable
     @Override
