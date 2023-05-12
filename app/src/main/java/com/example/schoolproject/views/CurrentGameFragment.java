@@ -52,9 +52,7 @@ public class CurrentGameFragment extends Fragment {
     private ArrayList<User> totalPlayers = new ArrayList<>();
     private ArrayList<Question> questions = new ArrayList<>();
     private Question currentQuestion;
-    final boolean[] flag = {false};
-    boolean timerFlag = false;
-    int k = 0;
+    private int k = 0;
 
     private CurrentGameFragmentBinding binding;
 
@@ -416,23 +414,28 @@ public class CurrentGameFragment extends Fragment {
 
 
     public void fillAdapter() {
-        DatabaseReference ref = FirebaseDatabase.getInstance(MainActivity.DATABASE_PATH)
-                .getReference("/games/" + currentGame.getPin() + "/players/");
-        ref.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot data : snapshot.getChildren()) {
-                    User player = data.getValue(User.class);
-                    totalPlayers.add(player);
-                    refreshAdapter();
+        try {
+            DatabaseReference ref = FirebaseDatabase.getInstance(MainActivity.DATABASE_PATH)
+                    .getReference("/games/" + currentGame.getPin() + "/players/");
+            ref.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    totalPlayers.clear();
+                    for (DataSnapshot data : snapshot.getChildren()) {
+                        User player = data.getValue(User.class);
+                        totalPlayers.add(player);
+                        refreshAdapter();
+                    }
                 }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
 
-            }
-        });
+                }
+            });
+        } catch (Exception e) {
+
+        }
     }
 
     public void refreshAdapter() {
@@ -440,38 +443,11 @@ public class CurrentGameFragment extends Fragment {
 
         for (User u : totalPlayers) {
             adapter.add(new UserScoreItem(u));
-        }
 
-        sortScores(adapter);
-        //binding.currentGameRecyclerView.setAdapter(adapter);
-    }
-
-    private void sortScores(GroupAdapter<GroupieViewHolder> adapter) {
-        ArrayList<UserScoreItem> userScoreItems = new ArrayList<>();
-        for (int i = 0; i < adapter.getItemCount(); i++) {
-            userScoreItems.add((UserScoreItem) adapter.getItem(i));
-            System.out.println(((UserScoreItem) adapter.getItem(i)).score.toString());
-        }
-
-        boolean isSorted = false;
-
-        while (!isSorted) {
-            isSorted = true;
-            for (int i = 0; i < (userScoreItems.size()-1); i++) {
-                if (userScoreItems.get(i).score < userScoreItems.get(i+1).score) {
-                    UserScoreItem temp = userScoreItems.get(i);
-                    userScoreItems.set(i, userScoreItems.get(i+1));
-                    userScoreItems.set(i+1, temp);
-                    isSorted = false;
-                }
-            }
-        }
-
-        for (UserScoreItem userScoreItem : userScoreItems) {
-            adapter.add(userScoreItem);
         }
 
         binding.currentGameRecyclerView.setAdapter(adapter);
+        //sortScores(adapter);
     }
 
     public void setCurrentQuestion(Game game) {
@@ -524,7 +500,6 @@ public class CurrentGameFragment extends Fragment {
                         currentQuestion = questions.get(finalI);
 
                     } else if (answersCount != 0 && answersCount >= totalPlayers.size() && finalI == questions.size()) {
-                        timerFlag = true;
                         currentQuestion = questions.get(questions.size()-1);
                         refreshUi(currentQuestion);
                         //Toast.makeText(getContext(), finalI + "final" + questions.size(), Toast.LENGTH_SHORT).show();
@@ -594,7 +569,7 @@ public class CurrentGameFragment extends Fragment {
     class UserScoreItem extends Item<GroupieViewHolder> {
 
         private User user;
-        public Long score;
+        public Long score = Long.valueOf(0);
 
         public UserScoreItem(User user) {
             this.user = user;
@@ -624,8 +599,9 @@ public class CurrentGameFragment extends Fragment {
             ref.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    score = (Long) snapshot.getValue();
-                    if (score != null) {
+
+                    if ((Long) snapshot.getValue() != null) {
+                        score = (Long) snapshot.getValue();
                         userScore.setText(Long.toString(score));
                     } else {
                         userScore.setText("0");

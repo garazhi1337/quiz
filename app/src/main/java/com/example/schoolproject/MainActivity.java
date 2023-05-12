@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
     private BottomNavigationView bottomNavigationView;
     public static final String DATABASE_PATH = "https://schoolproject-7f38f-default-rtdb.europe-west1.firebasedatabase.app";
     public static User currentUser;
-    AppBarConfiguration barConfiguration;
+    private AppBarConfiguration barConfiguration;
 
 
     @Override
