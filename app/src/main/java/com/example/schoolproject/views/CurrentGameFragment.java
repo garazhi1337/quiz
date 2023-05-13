@@ -1,6 +1,7 @@
 package com.example.schoolproject.views;
 
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -260,6 +261,7 @@ public class CurrentGameFragment extends Fragment {
             }
         });
 
+        /**
         //поток нужен чтобы обновить ui после 2 секунд после захода на фрагмент
         new Thread(new Runnable() {
             boolean fl = false;
@@ -284,6 +286,22 @@ public class CurrentGameFragment extends Fragment {
                 }
             }
         }).start();
+            */
+
+        new CountDownTimer(2000, 1000) {
+
+            public void onTick(long millisUntilFinished) {
+                k++;
+            }
+
+            public void onFinish() {
+                try {
+                    setCurrentQuestion(currentGame);
+                } catch (Exception e) {
+
+                }
+            }
+        }.start();
 
         return binding.getRoot();
     }
