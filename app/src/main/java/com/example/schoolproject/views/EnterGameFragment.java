@@ -81,6 +81,7 @@ public class EnterGameFragment extends Fragment {
                                             }
                                         });
                             } else {
+                                ref.removeEventListener(this);
                                 binding.progressCircular.setVisibility(View.INVISIBLE);
                                 Toast.makeText(getContext(), getResources().getString(R.string.cantaccess), Toast.LENGTH_SHORT).show();
                             }
@@ -120,9 +121,6 @@ public class EnterGameFragment extends Fragment {
                     ref2.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            if (snapshot.hasChildren()) {
-
-                            }
                             for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                                 User user = dataSnapshot.getValue(User.class);
                                 if (user != null) {

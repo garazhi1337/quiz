@@ -1,7 +1,6 @@
 package com.example.schoolproject.views;
 
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -288,21 +287,6 @@ public class CurrentGameFragment extends Fragment {
         }).start();
             */
 
-        new CountDownTimer(2000, 1000) {
-
-            public void onTick(long millisUntilFinished) {
-                k++;
-            }
-
-            public void onFinish() {
-                try {
-                    setCurrentQuestion(currentGame);
-                } catch (Exception e) {
-
-                }
-            }
-        }.start();
-
         return binding.getRoot();
     }
 
@@ -486,7 +470,11 @@ public class CurrentGameFragment extends Fragment {
                     long answersCount = 0;
                     for (DataSnapshot snap : snapshot.getChildren()) {
                         Long k = (Long) snap.getValue();
-                        answersCount += k;
+                        if (k != null) {
+                            answersCount += k;
+
+                        }
+
                         if (answersCount == questions.size()) {
                             binding.answers.setText(getResources().getString(R.string.answers) + " " + 0);
                         } else {
@@ -495,6 +483,7 @@ public class CurrentGameFragment extends Fragment {
 
                     }
 
+                    //Toast.makeText(getContext(), totalPlayers.size() + " " + answersCount + " " + questions.size(), Toast.LENGTH_SHORT).show();
 
                     if ((answersCount == 0 || answersCount < totalPlayers.size()) && (finalI < questions.size())) {
 
@@ -535,7 +524,13 @@ public class CurrentGameFragment extends Fragment {
                         ft.commit();
 
                     } else {
-                        refreshUi(currentQuestion);
+                        try {
+                            //currentQuestion = questions.get(finalI - 1);
+                            refreshUi(currentQuestion);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
                     }
                 }
 
@@ -573,6 +568,8 @@ public class CurrentGameFragment extends Fragment {
                     Question question = data.getValue(Question.class);
                     questions.add(question);
                 }
+
+                setCurrentQuestion(game);
             }
 
             @Override
