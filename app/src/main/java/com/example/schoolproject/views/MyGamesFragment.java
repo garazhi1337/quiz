@@ -59,10 +59,15 @@ public class MyGamesFragment extends Fragment {
                 @Override
                 public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                     Game game = snapshot.getValue(Game.class);
-                    if (game.getAuthor().equals(MainActivity.currentUser.getUsername())) {
-                        games.add(game);
-                        refreshAdapter();
+                    try {
+                        if (game.getAuthor().equals(MainActivity.currentUser.getUsername())) {
+                            games.add(game);
+                            refreshAdapter();
+                        }
+                    } catch (Exception e) {
+
                     }
+
                 }
 
                 @Override
@@ -153,6 +158,7 @@ public class MyGamesFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
                     if (!game.getStarted()) {
+
                         Set<User> members = new HashSet<>();
                         DatabaseReference membersRef = FirebaseDatabase.getInstance(MainActivity.DATABASE_PATH)
                                         .getReference("/games/" + game.getPin() + "/players/");
@@ -161,6 +167,7 @@ public class MyGamesFragment extends Fragment {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                 if (snapshot.hasChildren()) {
+                                    Toast.makeText(getContext(), "Started", Toast.LENGTH_SHORT).show();
 
                                     for (DataSnapshot snap : snapshot.getChildren()) {
                                         User u = (User) snap.getValue(User.class);
@@ -178,6 +185,10 @@ public class MyGamesFragment extends Fragment {
                                         finalRef.setValue(u);
                                     }
 
+                                    refreshAdapter();
+                                } else {
+                                    game.setStarted(true);
+                                    ref.setValue(game);
                                     refreshAdapter();
                                 }
 

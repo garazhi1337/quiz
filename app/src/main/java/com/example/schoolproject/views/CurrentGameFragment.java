@@ -260,6 +260,7 @@ public class CurrentGameFragment extends Fragment {
             }
         });
 
+        /**
         //поток нужен чтобы обновить ui после 2 секунд после захода на фрагмент
         new Thread(new Runnable() {
             boolean fl = false;
@@ -284,6 +285,7 @@ public class CurrentGameFragment extends Fragment {
                 }
             }
         }).start();
+            */
 
         return binding.getRoot();
     }
@@ -468,7 +470,11 @@ public class CurrentGameFragment extends Fragment {
                     long answersCount = 0;
                     for (DataSnapshot snap : snapshot.getChildren()) {
                         Long k = (Long) snap.getValue();
-                        answersCount += k;
+                        if (k != null) {
+                            answersCount += k;
+
+                        }
+
                         if (answersCount == questions.size()) {
                             binding.answers.setText(getResources().getString(R.string.answers) + " " + 0);
                         } else {
@@ -477,6 +483,7 @@ public class CurrentGameFragment extends Fragment {
 
                     }
 
+                    //Toast.makeText(getContext(), totalPlayers.size() + " " + answersCount + " " + questions.size(), Toast.LENGTH_SHORT).show();
 
                     if ((answersCount == 0 || answersCount < totalPlayers.size()) && (finalI < questions.size())) {
 
@@ -517,7 +524,13 @@ public class CurrentGameFragment extends Fragment {
                         ft.commit();
 
                     } else {
-                        refreshUi(currentQuestion);
+                        try {
+                            //currentQuestion = questions.get(finalI - 1);
+                            refreshUi(currentQuestion);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
                     }
                 }
 
@@ -555,6 +568,8 @@ public class CurrentGameFragment extends Fragment {
                     Question question = data.getValue(Question.class);
                     questions.add(question);
                 }
+
+                setCurrentQuestion(game);
             }
 
             @Override
