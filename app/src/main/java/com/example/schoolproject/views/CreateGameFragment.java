@@ -86,7 +86,7 @@ public class CreateGameFragment extends Fragment {
             binding.saveGameBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (questions.size() != 0) {
+                    if (questions.size() > 1) {
                         saveGame();
                     } else {
                         Toast.makeText(getContext(), getResources().getString(R.string.addquestion), Toast.LENGTH_SHORT).show();

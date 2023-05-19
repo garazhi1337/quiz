@@ -8,5 +8,12 @@
             android:id="@+id/signup"
             android:icon="@drawable/regestratiom"
             android:title="@string/registration" />
+
+        <!--
+        <item
+            android:id="@+id/language"
+            android:icon="@drawable/baseline_language_24"
+            android:title="@string/lang" />
+            -->
     </group>
 </menu>

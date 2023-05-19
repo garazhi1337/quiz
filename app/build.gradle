@@ -28,8 +28,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_16
+        targetCompatibility JavaVersion.VERSION_16
     }
 
     viewBinding {
@@ -38,6 +38,8 @@ android {
 }
 
 dependencies {
+
+    implementation 'com.google.android.material:material:1.0.0'
 
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation "com.github.lisawray.groupie:groupie:2.10.1"

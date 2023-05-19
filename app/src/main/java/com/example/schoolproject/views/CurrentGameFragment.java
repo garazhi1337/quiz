@@ -88,9 +88,9 @@ public class CurrentGameFragment extends Fragment {
                                     Long score = (Long) snapshot.getValue();
                                     if (currentQuestion.getAnswerOne().containsValue(true)) {
                                         if (score == null) {
-                                            ref2.setValue(127);
+                                            ref2.setValue(150);
                                         } else {
-                                            ref2.setValue(score + 149);
+                                            ref2.setValue(score + 150);
                                         }
                                     }
                                     ref2.removeEventListener(this);
@@ -138,9 +138,9 @@ public class CurrentGameFragment extends Fragment {
                                     Long score = (Long) snapshot.getValue();
                                     if (currentQuestion.getAnswerTwo().containsValue(true)) {
                                         if (score == null) {
-                                            ref2.setValue(127);
+                                            ref2.setValue(150);
                                         } else {
-                                            ref2.setValue(score + 149);
+                                            ref2.setValue(score + 150);
                                         }
                                     }
                                     ref2.removeEventListener(this);
@@ -186,9 +186,9 @@ public class CurrentGameFragment extends Fragment {
                                     Long score = (Long) snapshot.getValue();
                                     if (currentQuestion.getAnswerThree().containsValue(true)) {
                                         if (score == null) {
-                                            ref2.setValue(127);
+                                            ref2.setValue(150);
                                         } else {
-                                            ref2.setValue(score + 149);
+                                            ref2.setValue(score + 150);
                                         }
                                     }
                                     ref2.removeEventListener(this);
@@ -234,9 +234,9 @@ public class CurrentGameFragment extends Fragment {
                                     Long score = (Long) snapshot.getValue();
                                     if (currentQuestion.getAnswerFour().containsValue(true)) {
                                         if (score == null) {
-                                            ref2.setValue(127);
+                                            ref2.setValue(150);
                                         } else {
-                                            ref2.setValue(score + 149);
+                                            ref2.setValue(score + 150);
                                         }
                                     }
                                     ref2.removeEventListener(this);
@@ -468,20 +468,25 @@ public class CurrentGameFragment extends Fragment {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     long answersCount = 0;
-                    for (DataSnapshot snap : snapshot.getChildren()) {
-                        Long k = (Long) snap.getValue();
-                        if (k != null) {
-                            answersCount += k;
+
+                    try {
+                        for (DataSnapshot snap : snapshot.getChildren()) {
+                            Long k = (Long) snap.getValue();
+                            if (k != null) {
+                                answersCount += k;
+                            }
+
+                            if (answersCount == totalPlayers.size()) {
+                                binding.answers.setText(getResources().getString(R.string.answers) + " " + 0);
+                            } else {
+                                binding.answers.setText(getResources().getString(R.string.answers) + " " + answersCount);
+                            }
 
                         }
-
-                        if (answersCount == questions.size()) {
-                            binding.answers.setText(getResources().getString(R.string.answers) + " " + 0);
-                        } else {
-                            binding.answers.setText(getResources().getString(R.string.answers) + " " + answersCount);
-                        }
+                    } catch (Exception e) {
 
                     }
+
 
                     //Toast.makeText(getContext(), totalPlayers.size() + " " + answersCount + " " + questions.size(), Toast.LENGTH_SHORT).show();
 

@@ -43,10 +43,16 @@
     <string name="checkfields">Sprawdź pola do wypełnienia</string>
     <string name="cantaccess">Nie można połączyć się z ankietą</string>
     <string name="zagruzka">Ładowanie...</string>
-    <string name="addquestion">Dodaj przynajmniej jedno pytanie</string>
+    <string name="addquestion">Dodaj przynajmniej dwa pytania</string>
     <string name="deletingin">Usuwanie ankiety przez</string>
     <string name="xseconds">sekund</string>
     <string name="answers">Odpowiedźi: </string>
     <string name="emptystr">Czczo </string>
+    <string name="lang">Język </string>
 
+    <string name="rus">Rosyjski </string>
+    <string name="eng">Angielski </string>
+    <string name="pol">Polski </string>
+    <string name="chooselang">Wybierz język </string>
+    <string name="myfinishedgames">Completed games </string>
 </resources>

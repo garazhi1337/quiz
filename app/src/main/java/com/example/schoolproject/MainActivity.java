@@ -11,22 +11,18 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.ui.AppBarConfiguration;
 
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.schoolproject.R;
 import com.example.schoolproject.databinding.ActivityMainBinding;
 import com.example.schoolproject.models.User;
 import com.example.schoolproject.views.CreateGameFragment;
 import com.example.schoolproject.views.EnterGameFragment;
 import com.example.schoolproject.views.MyGamesFragment;
+import com.example.schoolproject.views.MyGamesResultsFragment;
 import com.example.schoolproject.views.RegistrationFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
@@ -35,8 +31,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
-
-import org.w3c.dom.Text;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -78,6 +72,12 @@ public class MainActivity extends AppCompatActivity {
                         ft.commit();
                         drawer.closeDrawers();
                         break;
+                        /**
+                    case R.id.language:
+                        FragmentManager manager = getSupportFragmentManager();
+                        AppDialogFragment myDialogFragment = new AppDialogFragment();
+                        myDialogFragment.show(manager, "myDialog");
+                         */
                 }
 
                 return false;
@@ -106,6 +106,12 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.mygames:
                     bottomNavigationView.getMenu().findItem(R.id.mygames).setChecked(true);
                     fragmentTransaction.replace(R.id.nav_host_fragment, new MyGamesFragment());
+                    fragmentTransaction.addToBackStack(null);
+                    fragmentTransaction.commit();
+                    break;
+                case R.id.mycompgames:
+                    bottomNavigationView.getMenu().findItem(R.id.mycompgames).setChecked(true);
+                    fragmentTransaction.replace(R.id.nav_host_fragment, new MyGamesResultsFragment());
                     fragmentTransaction.addToBackStack(null);
                     fragmentTransaction.commit();
                     break;

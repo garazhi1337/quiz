@@ -10,4 +10,7 @@
     <item android:id="@+id/mygames"
         android:title="@string/mygames"
         android:icon="@drawable/database" />
+    <item android:id="@+id/mycompgames"
+        android:title="@string/myfinishedgames"
+        android:icon="@drawable/pngwing_com" />
 </menu>

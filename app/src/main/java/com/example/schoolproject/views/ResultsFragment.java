@@ -69,7 +69,25 @@ public class ResultsFragment extends Fragment {
                         getResources().getString(R.string.xseconds));
                 DatabaseReference ref = FirebaseDatabase.getInstance(MainActivity.DATABASE_PATH)
                         .getReference("/games/" + currentGame.getPin() + "/");
-                ref.removeValue();
+
+                DatabaseReference newRef = FirebaseDatabase.getInstance(MainActivity.DATABASE_PATH)
+                        .getReference("/results/" + currentGame.getPin() + "/");
+
+                ref.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        newRef.setValue(snapshot.getValue());
+                        ref.removeValue();
+                        ref.removeEventListener(this);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
+
             }
         }.start();
 

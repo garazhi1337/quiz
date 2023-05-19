@@ -12,7 +12,7 @@
     <string name="login">Войти</string>
     <string name="creategame">Создать игру</string>
     <string name="warning1">Сначала зарегестрируйтесь или войдите</string>
-    <string name="title">Заголовок</string>
+    <string name="title">Название игры</string>
     <string name="savegame">Сохр. игру</string>
     <string name="addquestiom">Доб. вопрос</string>
     <string name="mygames">Мои игры</string>
@@ -43,9 +43,16 @@
     <string name="checkfields">Проверьте заполняемые поля</string>
     <string name="cantaccess">Не удалось подключиться к игре</string>
     <string name="zagruzka">Загрузка...</string>
-    <string name="addquestion">Добавьте хотя-бы один вопрос</string>
+    <string name="addquestion">Добавьте хотя-бы 2 вопросa</string>
     <string name="deletingin">Удаление игры через</string>
     <string name="xseconds">секунд</string>
     <string name="answers">Ответов: </string>
     <string name="emptystr">Пусто </string>
+    <string name="lang">Язык </string>
+
+    <string name="rus">Русский </string>
+    <string name="eng">Английский </string>
+    <string name="pol">Польский </string>
+    <string name="chooselang">Выберите язык </string>
+    <string name="myfinishedgames">Завершенные игры </string>
 </resources>
