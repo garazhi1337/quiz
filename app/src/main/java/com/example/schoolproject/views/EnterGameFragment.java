@@ -57,8 +57,8 @@ public class EnterGameFragment extends Fragment {
                         @Override
                         public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                             Game game = snapshot.getValue(Game.class);
-                            if (game != null && game.getPin().equals(binding.enterPin.getText().toString().trim())
-                                    && game.getStarted() == false && !currentUser.getUsername().equals(game.getAuthor())) {
+                            if (game.getPin().equals(binding.enterPin.getText().toString().trim())
+                                    && game.getStarted() == false && !MainActivity.currentUser.getUsername().equals(game.getAuthor())) {
                                 DatabaseReference ref2 = FirebaseDatabase.getInstance(MainActivity.DATABASE_PATH)
                                         .getReference("/games/" + game.getPin() + "/players/" + MainActivity.currentUser.getUsername() + "/");
                                 ref2.setValue(MainActivity.currentUser)
@@ -81,9 +81,9 @@ public class EnterGameFragment extends Fragment {
                                             }
                                         });
                             } else {
-                                ref.removeEventListener(this);
                                 binding.progressCircular.setVisibility(View.INVISIBLE);
                                 Toast.makeText(getContext(), getResources().getString(R.string.cantaccess), Toast.LENGTH_SHORT).show();
+                                System.out.println(game.getPin() + " " + binding.enterPin.getText() + " " + game.getStarted() + " " + !MainActivity.currentUser.getUsername().equals(game.getAuthor()));
                             }
                         }
 

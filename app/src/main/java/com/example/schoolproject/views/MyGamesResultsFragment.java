@@ -11,6 +11,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.schoolproject.MainActivity;
@@ -18,6 +20,7 @@ import com.example.schoolproject.R;
 import com.example.schoolproject.databinding.MyGamesResultsFragmentBinding;
 import com.example.schoolproject.models.Game;
 import com.example.schoolproject.models.User;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -41,26 +44,36 @@ public class MyGamesResultsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = MyGamesResultsFragmentBinding.inflate(inflater, container, false);
 
-        DatabaseReference ref = FirebaseDatabase.getInstance(MainActivity.DATABASE_PATH)
-                .getReference("/results/");
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            DatabaseReference ref = FirebaseDatabase.getInstance(MainActivity.DATABASE_PATH)
+                    .getReference("/results/");
 
-        ref.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot snap : snapshot.getChildren()) {
-                    Game game = snap.getValue(Game.class);
-                    if (game.getAuthor().equals(MainActivity.currentUser.getUsername())) {
-                        games.add(game);
-                        refreshAdapter();
+            ref.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    for (DataSnapshot snap : snapshot.getChildren()) {
+                        Game game = snap.getValue(Game.class);
+                        if (game.getAuthor().equals(MainActivity.currentUser.getUsername())) {
+                            games.add(game);
+                            refreshAdapter();
+                        }
                     }
                 }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
 
-            }
-        });
+                }
+            });
+        } else {
+            FragmentManager fm = getActivity().getSupportFragmentManager();
+            FragmentTransaction ft = fm.beginTransaction();
+            ft.replace(R.id.nav_host_fragment, new RegistrationFragment());
+            ft.addToBackStack(null);
+            ft.commit();
+        }
+
+
 
         return binding.getRoot();
     }
