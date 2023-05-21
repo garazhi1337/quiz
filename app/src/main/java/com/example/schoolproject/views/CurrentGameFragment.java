@@ -52,6 +52,7 @@ public class CurrentGameFragment extends Fragment {
     private ArrayList<User> totalPlayers = new ArrayList<>();
     private ArrayList<Question> questions = new ArrayList<>();
     private Question currentQuestion;
+    private Question previousQuestion;
     private int k = 0;
 
     private CurrentGameFragmentBinding binding;
@@ -495,6 +496,7 @@ public class CurrentGameFragment extends Fragment {
                         //Toast.makeText(getContext(), "ostalsya v etom je", Toast.LENGTH_SHORT).show();
                         if (currentQuestion == null) {
                             currentQuestion = questions.get(finalI-1);
+                            previousQuestion = currentQuestion;
                             refreshUi(currentQuestion);
                         } else {
                             refreshUi(currentQuestion);
@@ -506,6 +508,7 @@ public class CurrentGameFragment extends Fragment {
                         if ((currentQuestion != null) && (!currentQuestion.equals(questions.get(finalI)))) {
                             //Toast.makeText(getContext(), finalI + "perehod na sleduyushii" + questions.size(), Toast.LENGTH_SHORT).show();
                             currentQuestion = questions.get(finalI);
+                            previousQuestion = questions.get(finalI - 1);
                             refreshUi(currentQuestion);
                         }
 
@@ -513,6 +516,7 @@ public class CurrentGameFragment extends Fragment {
 
                     } else if (answersCount != 0 && answersCount >= totalPlayers.size() && finalI == questions.size()) {
                         currentQuestion = questions.get(questions.size()-1);
+                        previousQuestion = questions.get(questions.size()-2);
                         refreshUi(currentQuestion);
                         //Toast.makeText(getContext(), finalI + "final" + questions.size(), Toast.LENGTH_SHORT).show();
                         FragmentManager fm = getActivity().getSupportFragmentManager();
@@ -574,7 +578,11 @@ public class CurrentGameFragment extends Fragment {
                     questions.add(question);
                 }
 
-                setCurrentQuestion(game);
+                try {
+                    setCurrentQuestion(game);
+                } catch (Exception e) {
+
+                }
             }
 
             @Override
