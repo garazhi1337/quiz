@@ -76,9 +76,11 @@ public class ResultsFragment extends Fragment {
                 ref.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        newRef.setValue(snapshot.getValue());
-                        ref.removeValue();
-                        ref.removeEventListener(this);
+                        if (snapshot.hasChildren()) {
+                            newRef.setValue(snapshot.getValue());
+                            ref.removeValue();
+                            ref.removeEventListener(this);
+                        }
                     }
 
                     @Override
