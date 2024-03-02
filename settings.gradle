@@ -17,3 +17,4 @@ dependencyResolutionManagement {
 }
 rootProject.name = "SchoolProject"
 include ':app'
+include ':app'
